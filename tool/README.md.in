@@ -1,0 +1,12 @@
+preprocessor
+=====
+
+{{DESCRIPTION}}
+
+Version: {{VERSION}}
+
+Initial release. Use at your own risk!
+
+```dart
+{{example/example.dart}}
+```

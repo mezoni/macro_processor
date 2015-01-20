@@ -1,0 +1,608 @@
+%{
+library preprocessor.internal.parser.p_parser;
+
+import "dart:math";
+
+import "package:preprocessor/internal/ast/ast.dart";
+
+Expression _binary(left, _Node node, int position) {
+  if (node == null) {
+    return left;
+  }
+  var right = _binary(node.operand, node.next, position);
+  return new BinaryExpression(left: left, operator: node.operator, position: position, right: right);  
+ }
+
+Expression _conditional(Expression condition, Expression success, Expression fail, int position) {  
+  return new ConditionalExpression(condition: condition, success: success, fail: fail, position: position);
+}
+
+int _escape(String ch) {
+  switch(ch) {
+    case "a":
+      return 0x07;
+    case "b":
+      return 0x08;
+    case "f":
+      return 0x0c;
+    case "n":
+      return 0x0a;
+    case "r":
+      return 0x0d;
+    case "t":
+      return 0x09;
+    case "v":
+      return 0x0b;
+    case "\'":
+      return 0x27;
+    case "\"":
+      return 0x22;
+    case "\?":
+      return 0x3f;
+    default:
+      throw new StateError("Unknown escape sequence: \\$ch");  
+  }
+}
+
+FloatingPointLiteral _floatLiteral(String source, int position) {
+  var value = _parserFloat(source);
+  return new FloatingPointLiteral(position: position, text: source, value: value);
+}
+
+double _parserFloat(String source) {
+  source = source.toLowerCase();
+  var hex = false;
+  if (source.startsWith("0x")) {
+    source = source.substring(2);
+    hex = true;
+  }
+  var length = source.length;
+  var endsWith = source[length - 1];
+  if (endsWith == "f" || endsWith == "l") {
+    source = source.substring(0, length - 1);
+  }
+  if (!hex) {
+    return double.parse(source);
+  }
+  var index = source.indexOf("p");
+  var exponent = int.parse(source.substring(index + 1));
+  source = source.substring(0, index);
+  index = source.indexOf(".");
+  int integer = 0;
+  int fractional = 0;
+  if (index == 0) {
+    fractional = int.parse(source.substring(1), radix: 16);
+  } else if (index > 0) {
+    integer = int.parse(source.substring(0, index), radix: 16);
+    fractional = int.parse(source.substring(index + 1), radix: 16);
+  } else {
+    integer = int.parse(source, radix: 16);
+  }
+  var d = double.parse(".$fractional") * .625;
+  return (integer + d) * pow(2, exponent);
+}
+
+StringLiteral _stringLiteral(String source, List<int> characters, int position) {
+  var value = "";
+  if (characters != null) {
+    value = new String.fromCharCodes(characters);
+  }    
+  return new StringLiteral(position: position, text: source, value: value);
+}
+
+SourceLine _sourceLine(List<SourceFragment> fragments, SourceFragment last, int position) {
+  if (last != null) {
+    fragments.add(last);
+  }
+  return new SourceLine(fragments: fragments, position: position); 
+}
+
+Expression _unary(String operator, Expression operand, int position) {  
+  return new UnaryExpression(operand: operand, operator: operator, position: position);
+}
+
+class _Node {
+  final _Node next;
+
+  final dynamic operand;
+  
+  final String operator;
+  
+  final int position;  
+  
+  _Node(this.operator, this.operand, this.next, this.position);
+  
+  String toString() {
+    var sb = new StringBuffer();
+    sb.write(operator);
+    sb.write(" ");
+    sb.write(operand);
+    if (next != null) {
+      sb.write(" ");
+      sb.write(next);    
+    }
+    return sb.toString();
+  }
+}
+
+}%
+
+# Nonterminals
+
+preprocessing_file <-
+  group? eof { $$ = new PreprocessingFile(groups: $1, position: $start); }
+
+group <-
+  group_part+
+
+group_part <-
+  if_section
+  / control_line
+  / text_line
+
+if_section <-
+  if_group elif_groups? else_group? endif_line { $$ = new IfSection(ifGroup: $1, elifGroups: $2, elseGroup: $3, endifLine: $4, position: $start); }
+
+if_group <-
+  if constant_expression new_line group? { $$ = new IfDirective(body: $4, condition: $2, name: $1, position: $start); }
+  / ifdef identifier new_line group? { $$ = new IfDirective(body: $4, condition: $2, name: $1, position: $start); }
+  / ifndef identifier new_line group? { $$ = new IfDirective(body: $4, condition: $2, name: $1, position: $start); }
+
+constant_expression <-
+  conditional_expression
+
+conditional_expression <-
+  logical_or_expression question_mark expression semicolon conditional_expression { $$ = _conditional($1, $3, $5, $start); }
+  / logical_or_expression
+
+logical_or_expression <-
+  logical_and_expression logical_or_expression1 { $$ = _binary($1, $2, $start); }
+
+logical_and_expression <-
+  inclusive_or_expression logical_and_expression1 { $$ = _binary($1, $2, $start); }
+
+inclusive_or_expression <-
+  exclusive_or_expression inclusive_or_expression1 { $$ = _binary($1, $2, $start); }
+
+exclusive_or_expression <-
+  and_expression exclusive_or_expression1 { $$ = _binary($1, $2, $start); }
+
+and_expression <-
+  equality_expression and_expression1 { $$ = _binary($1, $2, $start); }
+
+equality_expression <-
+  relational_expression equality_expression1 { $$ = _binary($1, $2, $start); }
+
+relational_expression <-
+  shift_expression relational_expression1 { $$ = _binary($1, $2, $start); }
+
+shift_expression <-
+  additive_expression shift_expression1 { $$ = _binary($1, $2, $start); }
+
+additive_expression <-
+  multiplicative_expression additive_expression1 { $$ = _binary($1, $2, $start); }
+
+multiplicative_expression <-
+  unary_expression multiplicative_expression1 { $$ = _binary($1, $2, $start); }
+
+unary_expression <-
+  primary_expression
+  / unary_operator unary_expression { $$ = _unary($1, $2, $start); }
+
+primary_expression <-
+  defined
+  / identifier
+  / constant
+  / lparen expression rparen { $$ = new ParenthesisExpression(expression: $2, position: $start); }
+
+expression <-
+  conditional_expression
+
+multiplicative_expression1 <-
+  multiplicative_operator unary_expression multiplicative_expression1 { $$ = new _Node($1, $2, $3, $start); }
+  / '' { $$ = null; }
+
+additive_expression1 <-
+  additive_operator multiplicative_expression additive_expression1 { $$ = new _Node($1, $2, $3, $start); }
+  / '' { $$ = null; }
+
+shift_expression1 <-
+  shift_operator additive_expression shift_expression1 { $$ = new _Node($1, $2, $3, $start); }
+  / '' { $$ = null; }
+
+relational_expression1 <-
+  relational_operator shift_expression relational_expression1 { $$ = new _Node($1, $2, $3, $start); }
+  / '' { $$ = null; }
+
+equality_expression1 <-
+  eq relational_expression equality_expression1 { $$ = new _Node($1, $2, $3, $start); }
+  / neq relational_expression equality_expression1 { $$ = new _Node($1, $2, $3, $start); }
+  / '' { $$ = null; }
+
+and_expression1 <-
+  ampersand equality_expression and_expression1 { $$ = new _Node($1, $2, $3, $start); }
+  / '' { $$ = null; }
+
+exclusive_or_expression1 <-
+  xor and_expression exclusive_or_expression1 { $$ = new _Node($1, $2, $3, $start); }
+  / '' { $$ = null; }
+
+inclusive_or_expression1 <-
+  vertical_line exclusive_or_expression inclusive_or_expression1 { $$ = new _Node($1, $2, $3, $start); }
+  / '' { $$ = null; }
+
+logical_and_expression1 <-
+  ampersand2 inclusive_or_expression logical_or_expression1 { $$ = new _Node($1, $2, $3, $start); }
+  / '' { $$ = null; }
+
+logical_or_expression1 <-
+  vertical_line2 logical_and_expression logical_or_expression1 { $$ = new _Node($1, $2, $3, $start); }
+  / '' { $$ = null; }
+
+elif_groups <-
+  elif_group+
+
+elif_group <-
+  elif constant_expression new_line group? { $$ = new IfDirective(body: $4, condition: $2, name: $1, position: $start); }
+
+else_group <-
+  else new_line group? { $$ = new ElseDirective(body: $3, position: $start); }
+
+eval_line <-
+  constant_expression (new_line / eof) { $$ = $1; }
+
+# Lexemes
+
+additive_operator <-
+  plus
+  / minus
+
+ampersand <-
+  '&' spaces { $$ = $1; }
+
+ampersand2 <-
+  '&&' spaces { $$ = $1; }
+
+constant <-
+  constant_base spaces { $$ = $1; }
+
+control_line <-
+  define_directive
+  / undef_directive
+  / error_directive
+
+defined <-
+  DEFINED lparen identifier rparen { $$ = new DefinedExpression(identifier: $3, position: $start); }
+
+elif <-
+  '#elif' spaces { $$ = $1; }
+
+else <-
+  '#else' spaces { $$ = $1; }
+
+endif_line <-
+  '#endif' new_line? { $$ = new EndifDirective(position: $start); }
+
+eof <-
+  !.
+
+eq <-
+  '==' spaces { $$ = $1; }
+
+identifier <-
+  identifier_base spaces { $$ = $1; }
+
+if <-
+  '#if' spaces { $$ = $1; }
+
+ifdef <-
+  '#ifdef' spaces { $$ = $1; }
+
+ifndef <-
+  '#ifndef' spaces { $$ = $1; }
+
+lparen <-
+  '(' spaces { $$ = $1; }
+
+multiplicative_operator <-
+  asterisk
+  / slash
+  / percent
+
+neq <-
+  '!=' spaces { $$ = $1; }
+
+new_line <-
+  '\r\n'
+  / [\n\r]
+
+question_mark <-
+  '?' spaces { $$ = $1; }
+
+relational_operator <-
+  lt
+  / gt
+  / lte
+  / gte
+
+rparen <-
+  ')' spaces { $$ = $1; }
+
+semicolon <-
+  ':' spaces { $$ = $1; }
+
+shift_operator <-
+  lsh
+  / rsh
+
+text_line <-
+  !'#' source_line { $$ = $2; }
+
+unary_operator <-
+  plus
+  / minus
+  / tilde
+  / exclamation
+
+vertical_line <-
+  '|' spaces { $$ = $1; }
+
+vertical_line2 <-
+  '||' spaces { $$ = $1; }
+
+xor <-
+  '^' spaces { $$ = $1; }
+
+# Morphemes
+
+DEFINED <-
+  'defined' spaces { $$ = $1; }
+
+any_char_until_eol <-
+  !new_line . { $$ = $2; }
+
+any_chars_until_eol <-
+  any_char_until_eol* { $$ = _text(); }
+
+asterisk <-
+  '*' spaces { $$ = $1; }
+
+binary_exponent_part <-
+  ('p' / 'P') (sign / '') digit_sequence { $$ = _text(); }
+
+c_char <-
+  ![\n\r'\\] . { $$ = $2.codeUnitAt(0); }
+  / escape_sequence
+
+character_constant_base <-
+  '\'' c_char '\'' { $$ = new CharacterLiteral(position: $start, text: _text(), value: $2); }
+  / 'L\'' c_char '\'' { $$ = new CharacterLiteral(position: $start, text: _text(), value: $2); }
+
+constant_base <-
+  floating_constant_base
+  / integer_constant_base
+  / character_constant_base
+
+decimal_constant <-
+  nonzero_digit decimal_constant1 { $$ = int.parse(_text()); }
+
+decimal_constant1 <-
+  digit decimal_constant1
+  / ''
+
+decimal_floating_constant <-
+  decimal_floating_constant_base spaces { $$ = $1; }
+
+decimal_floating_constant_base <-
+  fractional_constant exponent_part? floating_suffix? { $$ = _floatLiteral(_text(), $start); }
+  / digit_sequence exponent_part floating_suffix? { $$ = _floatLiteral(_text(), $start); }
+
+define <-
+  '#define' spaces { $$ = $1; }
+
+define_directive <-
+  define identifier replacement_list new_line? { $$ = new DefineDirective(identifier: $2, replacement: $3, position: $start); }
+
+digit <-
+  [0-9]
+
+digit_sequence <-
+  digit+ { $$ = _text(); }
+
+error <-
+  '#error' spaces { $$ = $1; }
+
+error_directive <-
+  error any_chars_until_eol new_line? { $$ = new ErrorDirective(message: $2, position: $start); }
+
+escape_sequence <-
+  simple_escape_sequence
+  / octal_escape_sequence
+  / hexadecimal_escape_sequence
+  / universal_character_name
+
+exclamation <-
+  '!' spaces { $$ = $1; }
+
+exponent_part <-
+  ('e' / 'E') (sign / '') digit_sequence { $$ = _text(); }
+
+floating_constant_base <-
+  decimal_floating_constant
+  / hexadecimal_floating_constant
+
+floating_suffix <-
+  [FLfl]
+
+fractional_constant <-
+  digit_sequence? '.' digit_sequence { $$ = _text(); }
+  / digit_sequence '.' { $$ = _text(); }
+
+gt <-
+  '>' spaces { $$ = $1; }
+
+gte <-
+  '>=' spaces { $$ = $1; }
+
+hex_quad <-
+  hexadecimal_digit hexadecimal_digit hexadecimal_digit hexadecimal_digit { $$ = _text(); }
+
+hexadecimal_constant <-
+  hexadecimal_prefix hexadecimal_digit hexadecimal_constant1 { $$ = int.parse(_text(2), radix: 16); }
+
+hexadecimal_constant1 <-
+  hexadecimal_digit hexadecimal_constant1
+  / ''
+
+hexadecimal_digit <-
+  [0-af]
+
+hexadecimal_digit_sequence <-
+  hexadecimal_digit+ { $$ = _text(); }
+
+hexadecimal_escape_sequence <-
+  '\\x' hexadecimal_digit hexadecimal_escape_sequence1 { $$ = int.parse(_text(2), radix: 16); }
+
+hexadecimal_escape_sequence1 <-
+  hexadecimal_digit hexadecimal_escape_sequence1 { $$ = _text(); }
+  / ''
+
+hexadecimal_floating_constant <-
+  hexadecimal_prefix hexadecimal_fractional_constant binary_exponent_part floating_suffix? { $$ = _floatLiteral(_text(), $start); }
+  / hexadecimal_prefix hexadecimal_digit_sequence binary_exponent_part floating_suffix? { $$ = _floatLiteral(_text(), $start); }
+
+hexadecimal_fractional_constant <-
+  hexadecimal_digit_sequence? '.' hexadecimal_digit_sequence
+  / hexadecimal_digit_sequence '.'
+
+hexadecimal_prefix <-
+  '0x'
+  / '0X'
+
+identifier_base <-
+  identifier_nondigit identifier_base1 { $$ = new Identifier(name: _text(), position: $start); }
+
+identifier_base1 <-
+  identifier_nondigit identifier_base1 { $$ = _text(); }
+  / digit identifier_base1 { $$ = _text(); }
+  / ''
+
+identifier_nondigit <-
+  nondigit
+  / universal_character_name
+
+integer_constant_base <-
+  decimal_constant integer_suffix? { $$ = new IntegerLiteral(position: $start, text: _text(), value: $1); }
+  / hexadecimal_constant integer_suffix? { $$ = new IntegerLiteral(position: $start, text: _text(), value: $1); }
+  / octal_constant integer_suffix? { $$ = new IntegerLiteral(position: $start, text: _text(), value: $1); }
+
+integer_suffix <-
+  unsigned_suffix long_long_suffix
+  / unsigned_suffix long_suffix?
+  / long_long_suffix unsigned_suffix?
+  / long_suffix unsigned_suffix?
+
+long_long_suffix <-
+  'll'
+  / 'LL'
+
+long_suffix <-
+  [Ll]
+
+lsh <-
+  '<<' spaces { $$ = $1; }
+
+lt <-
+  '<' spaces { $$ = $1; }
+
+lte <-
+  '<=' spaces { $$ = $1; }
+
+minus <-
+  '+' spaces { $$ = $1; }
+
+new_line_fragment <-
+  new_line { $$ = new SourceFragment(position: $start, text: _text()); }
+
+nondigit <-
+  [A-Za-z_]
+
+nonzero_digit <-
+  [1-9]
+
+octal_constant <-
+  '0' octal_constant1 { $$ = int.parse(_text(), radix: 8); }
+
+octal_constant1 <-
+  octal_digit octal_constant1
+  / ''
+
+octal_digit <-
+  [0-7]
+
+octal_escape_sequence <-
+  '\\' octal_digit octal_digit octal_digit { $$ = int.parse(_text(1), radix: 8); }
+  / '\\' octal_digit octal_digit { $$ = int.parse(_text(1), radix: 8); }
+  / '\\' octal_digit { $$ = int.parse($2, radix: 8); }
+
+percent <-
+  '%' spaces { $$ = $1; }
+
+plus <-
+  '+' spaces { $$ = $1; }
+
+replacement_list <-
+  source_fragment*
+
+rsh <-
+  '<<' spaces { $$ = $1; }
+
+s_char <-
+  ![\n\r"\\] . { $$ = $2.codeUnitAt(0); }
+  / escape_sequence
+
+s_char_sequence <-
+  s_char+
+
+sign <-
+  [+\-]
+
+simple_escape_sequence <-
+  [\\] ["'?\\a-bfnrtv] { $$ = _escape($1); }
+
+slash <-
+  '/' spaces { $$ = $1; }
+
+source_fragment <-
+  string_literal_base { $$ = new SourceFragment(position: $start, text: _text()); }
+  / constant_base { $$ = new SourceFragment(position: $start, text: _text()); }
+  / identifier_base { $$ = new SourceFragment(name: _text(), position: $start, text: _text()); }
+  / (!new_line !identifier_base !string_literal_base !constant_base .)+ { $$ = new SourceFragment(position: $start, text: _text()); }
+
+source_line <-
+  source_fragment+ new_line_fragment? { $$ = _sourceLine($1, $2, $start); }
+  / new_line_fragment { $$ = _sourceLine([$1], null, $start); }
+
+spaces <-
+  [\t ]* { $$ = _text(); }
+
+string_literal_base <-
+  '"' s_char_sequence? '"' { $$ = _stringLiteral(_text(), $2, $start); }
+  / 'L"' s_char_sequence? '"' { $$ = _stringLiteral(_text(), $2, $start); }
+
+tilde <-
+  '~' spaces { $$ = $1; }
+
+undef <-
+  '#undef' spaces { $$ = $1; }
+
+undef_directive <-
+  undef identifier new_line? { $$ = new UndefDirective(identifier: $2, position: $start); }
+
+universal_character_name <-
+  '\\U' hex_quad hex_quad { $$ = int.parse(_text(2), radix: 16); }
+  / '\\u' hex_quad { $$ = int.parse(_text(2), radix: 16); }
+
+unsigned_suffix <-
+  [Uu]
+

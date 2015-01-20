@@ -1,0 +1,10 @@
+name: macro_processor
+version: 0.0.1
+author: Andrew Mezoni <andrew.mezoni@gmail.com>
+description: Lightweight macro processor with syntax similar to C language.
+homepage: https://github.com/mezoni/macro_processor
+dependencies:
+  text: any
+dev_dependencies:
+  build_tools: any
+  unittest: any
