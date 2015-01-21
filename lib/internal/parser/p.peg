@@ -3,7 +3,7 @@ library preprocessor.internal.parser.p_parser;
 
 import "dart:math";
 
-import "package:preprocessor/internal/ast/ast.dart";
+import "package:macro_processor/internal/ast/ast.dart";
 
 Expression _binary(left, _Node node, int position) {
   if (node == null) {
