@@ -127,7 +127,7 @@ class _Node {
 
 }%
 
-# Nonterminals
+### Sentences (nonterminals) ###
 
 preprocessing_file <-
   group? eof { $$ = new PreprocessingFile(groups: $1, position: $start); }
@@ -195,6 +195,9 @@ primary_expression <-
   / constant
   / lparen expression rparen { $$ = new ParenthesisExpression(expression: $2, position: $start); }
 
+defined <-
+  DEFINED lparen identifier rparen { $$ = new DefinedExpression(identifier: $3, position: $start); }
+
 expression <-
   conditional_expression
 
@@ -248,10 +251,49 @@ elif_group <-
 else_group <-
   else new_line group? { $$ = new ElseDirective(body: $3, position: $start); }
 
+endif_line <-
+  '#endif' new_line? { $$ = new EndifDirective(position: $start); }
+
+control_line <-
+  define_directive
+  / undef_directive
+  / error_directive
+
+define_directive <-
+  define identifier replacement_list new_line? { $$ = new DefineDirective(identifier: $2, replacement: $3, position: $start); }
+
+replacement_list <-
+  source_fragment*
+
+undef_directive <-
+  undef identifier new_line? { $$ = new UndefDirective(identifier: $2, position: $start); }
+
+error_directive <-
+  error any_chars_until_eol new_line? { $$ = new ErrorDirective(message: $2, position: $start); }
+
+any_chars_until_eol <-
+  any_char_until_eol* { $$ = _text(); }
+
+any_char_until_eol <-
+  !new_line . { $$ = $2; }
+
+text_line <-
+  !'#' source_line { $$ = $2; }
+
+source_line <-
+  source_fragment+ new_line_fragment? { $$ = _sourceLine($1, $2, $start); }
+  / new_line_fragment { $$ = _sourceLine([$1], null, $start); }
+
+new_line_fragment <-
+  new_line { $$ = new SourceFragment(position: $start, text: _text()); }
+
 eval_line <-
   constant_expression (new_line / eof) { $$ = $1; }
 
-# Lexemes
+### Lexemes (tokens) ###
+
+DEFINED <-
+  'defined' spaces { $$ = $1; }
 
 additive_operator <-
   plus
@@ -264,15 +306,10 @@ ampersand2 <-
   '&&' spaces { $$ = $1; }
 
 constant <-
-  constant_base spaces { $$ = $1; }
+  constant_base spaces2 { $$ = $1; }
 
-control_line <-
-  define_directive
-  / undef_directive
-  / error_directive
-
-defined <-
-  DEFINED lparen identifier rparen { $$ = new DefinedExpression(identifier: $3, position: $start); }
+define <-
+  '#define' spaces { $$ = $1; }
 
 elif <-
   '#elif' spaces { $$ = $1; }
@@ -280,17 +317,17 @@ elif <-
 else <-
   '#else' spaces { $$ = $1; }
 
-endif_line <-
-  '#endif' new_line? { $$ = new EndifDirective(position: $start); }
-
 eof <-
   !.
 
 eq <-
   '==' spaces { $$ = $1; }
 
+error <-
+  '#error' spaces { $$ = $1; }
+
 identifier <-
-  identifier_base spaces { $$ = $1; }
+  identifier_base spaces2 { $$ = $1; }
 
 if <-
   '#if' spaces { $$ = $1; }
@@ -335,14 +372,20 @@ shift_operator <-
   lsh
   / rsh
 
-text_line <-
-  !'#' source_line { $$ = $2; }
+source_fragment <-
+  string_literal_base { $$ = new SourceFragment(position: $start, text: _text()); }
+  / constant_base { $$ = new SourceFragment(position: $start, text: _text()); }
+  / identifier_base { $$ = new SourceFragment(name: _text(), position: $start, text: _text()); }
+  / !('\r\n' / [\n\r]) . { $$ = new SourceFragment(position: $start, text: _text()); }
 
 unary_operator <-
   plus
   / minus
   / tilde
   / exclamation
+
+undef <-
+  '#undef' spaces { $$ = $1; }
 
 vertical_line <-
   '|' spaces { $$ = $1; }
@@ -353,16 +396,7 @@ vertical_line2 <-
 xor <-
   '^' spaces { $$ = $1; }
 
-# Morphemes
-
-DEFINED <-
-  'defined' spaces { $$ = $1; }
-
-any_char_until_eol <-
-  !new_line . { $$ = $2; }
-
-any_chars_until_eol <-
-  any_char_until_eol* { $$ = _text(); }
+### Morphemes ###
 
 asterisk <-
   '*' spaces { $$ = $1; }
@@ -391,29 +425,17 @@ decimal_constant1 <-
   / ''
 
 decimal_floating_constant <-
-  decimal_floating_constant_base spaces { $$ = $1; }
+  decimal_floating_constant_base spaces2 { $$ = $1; }
 
 decimal_floating_constant_base <-
   fractional_constant exponent_part? floating_suffix? { $$ = _floatLiteral(_text(), $start); }
   / digit_sequence exponent_part floating_suffix? { $$ = _floatLiteral(_text(), $start); }
-
-define <-
-  '#define' spaces { $$ = $1; }
-
-define_directive <-
-  define identifier replacement_list new_line? { $$ = new DefineDirective(identifier: $2, replacement: $3, position: $start); }
 
 digit <-
   [0-9]
 
 digit_sequence <-
   digit+ { $$ = _text(); }
-
-error <-
-  '#error' spaces { $$ = $1; }
-
-error_directive <-
-  error any_chars_until_eol new_line? { $$ = new ErrorDirective(message: $2, position: $start); }
 
 escape_sequence <-
   simple_escape_sequence
@@ -521,11 +543,8 @@ lte <-
 minus <-
   '+' spaces { $$ = $1; }
 
-new_line_fragment <-
-  new_line { $$ = new SourceFragment(position: $start, text: _text()); }
-
 nondigit <-
-  [A-Za-z_]
+  [A-Z_a-z]
 
 nonzero_digit <-
   [1-9]
@@ -551,9 +570,6 @@ percent <-
 plus <-
   '+' spaces { $$ = $1; }
 
-replacement_list <-
-  source_fragment*
-
 rsh <-
   '<<' spaces { $$ = $1; }
 
@@ -573,18 +589,11 @@ simple_escape_sequence <-
 slash <-
   '/' spaces { $$ = $1; }
 
-source_fragment <-
-  string_literal_base { $$ = new SourceFragment(position: $start, text: _text()); }
-  / constant_base { $$ = new SourceFragment(position: $start, text: _text()); }
-  / identifier_base { $$ = new SourceFragment(name: _text(), position: $start, text: _text()); }
-  / (!new_line !identifier_base !string_literal_base !constant_base .)+ { $$ = new SourceFragment(position: $start, text: _text()); }
-
-source_line <-
-  source_fragment+ new_line_fragment? { $$ = _sourceLine($1, $2, $start); }
-  / new_line_fragment { $$ = _sourceLine([$1], null, $start); }
-
 spaces <-
   [\t ]* { $$ = _text(); }
+
+spaces2 <-
+  spaces
 
 string_literal_base <-
   '"' s_char_sequence? '"' { $$ = _stringLiteral(_text(), $2, $start); }
@@ -592,12 +601,6 @@ string_literal_base <-
 
 tilde <-
   '~' spaces { $$ = $1; }
-
-undef <-
-  '#undef' spaces { $$ = $1; }
-
-undef_directive <-
-  undef identifier new_line? { $$ = new UndefDirective(identifier: $2, position: $start); }
 
 universal_character_name <-
   '\\U' hex_quad hex_quad { $$ = int.parse(_text(2), radix: 16); }

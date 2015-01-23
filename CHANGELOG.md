@@ -1,3 +1,7 @@
+## 0.0.3
+
+- Minor changes in `p.peg` grammar
+
 ## 0.0.2
 
 - Generated new p.peg parser using new version of peg generator
