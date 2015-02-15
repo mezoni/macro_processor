@@ -250,7 +250,7 @@ class PParser {
   
   static final List<String> _expect9 = <String>["\'#define\'", "\'#error\'", "\'#undef\'"];
   
-  static final List<bool> _lookahead = _unmap([0x1ffa4c1, 0x17fffffe, 0xffffffd, 0x803, 0x0, 0x0, 0x701ffa0e, 0x697fffff, 0x7fffffff, 0x7e87ffff, 0x7fdfffff, 0x7fffffff, 0xc3ff, 0xc000000, 0x10000020, 0x20c0, 0x7f40c100, 0x600007, 0x30000000, 0x40000000, 0x421]);
+  static final List<bool> _lookahead = _unmap([0x1ffa4c1, 0x17fffffe, 0xffffffd, 0x803, 0x0, 0x0, 0x701ffa0e, 0x697fffff, 0x7fffffff, 0x7e87ffff, 0x7fdfffff, 0x3f01, 0xfe00, 0xc000000, 0x10000020, 0x20c0, 0x7f40c100, 0x600007, 0x30000000, 0x40000000, 0x421]);
   
   // '\n', '\r'
   static final List<bool> _mapping0 = _unmap([0x9]);
@@ -264,8 +264,8 @@ class PParser {
   // 'F', 'L', 'f', 'l'
   static final List<bool> _mapping2 = _unmap([0x41, 0x82]);
   
-  // '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^', '_', '`', 'a', 'f'
-  static final List<bool> _mapping3 = _unmap([0x7fffffff, 0x87ffff]);
+  // '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'a', 'b', 'c', 'd', 'e', 'f'
+  static final List<bool> _mapping3 = _unmap([0x7e03ff, 0xfc0000]);
   
   // 'L', 'l'
   static final List<bool> _mapping4 = _unmap([0x1, 0x2]);
@@ -424,11 +424,11 @@ class PParser {
   
   static final List<List<int>> _transitions31 = [[70, 70, 76, 76, 102, 102, 108, 108]];
   
-  static final List<List<int>> _transitions32 = [[48, 97, 102, 102]];
+  static final List<List<int>> _transitions32 = [[48, 57, 65, 70, 97, 102]];
   
-  static final List<List<int>> _transitions33 = [[0, 47, 98, 101, 103, 1114111], [48, 97, 102, 102]];
+  static final List<List<int>> _transitions33 = [[0, 47, 58, 64, 71, 96, 103, 1114111], [48, 57, 65, 70, 97, 102]];
   
-  static final List<List<int>> _transitions34 = [[46, 46], [48, 97, 102, 102]];
+  static final List<List<int>> _transitions34 = [[46, 46], [48, 57, 65, 70, 97, 102]];
   
   static final List<List<int>> _transitions35 = [[0, 47, 58, 64, 91, 91, 93, 94, 96, 96, 123, 1114111], [48, 57], [65, 90, 92, 92, 95, 95, 97, 122]];
   
@@ -526,7 +526,7 @@ class PParser {
       var alias = _tokenAliases[_token];
       var flag = _tokenFlags[_token];
       var name = _tokenNames[_token];
-      if (_failurePos == _inputLen && (flag & 1) != 0) {             
+      if (_failurePos > _tokenStart && _failurePos == _inputLen && (flag & 1) != 0) {             
         var message = "Unterminated '$name'";
         _errors.add(new PParserError(PParserError.UNTERMINATED, _failurePos, _tokenStart, message));
         _expected.addAll(expected);            
@@ -4704,7 +4704,7 @@ class PParser {
     var $$;
     // => hexadecimal_digit hexadecimal_digit hexadecimal_digit hexadecimal_digit # Choice
     switch (_getState(_transitions32)) {
-      // [0-a] [f]
+      // [0-9] [A-F] [a-f]
       case 0:
         // => hexadecimal_digit hexadecimal_digit hexadecimal_digit hexadecimal_digit # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -4837,7 +4837,7 @@ class PParser {
     var $$;
     // => hexadecimal_digit hexadecimal_constant1 / '' # Choice
     switch (_getState(_transitions33)) {
-      // [\u0000-/] [b-e] [g-\u0010ffff]
+      // [\u0000-/] [:-@] [G-`] [g-\u0010ffff]
       // EOF
       case 0:
       case 3:
@@ -4849,7 +4849,7 @@ class PParser {
         // <= ''
         _startPos = startPos0;
         break;
-      // [0-a] [f]
+      // [0-9] [A-F] [a-f]
       case 1:
         while (true) {
           // => hexadecimal_digit hexadecimal_constant1 # Sequence
@@ -4902,17 +4902,17 @@ class PParser {
   
   dynamic _parse_hexadecimal_digit() {
     // MORHEME
-    // hexadecimal_digit <- [0-af]
+    // hexadecimal_digit <- [0-9A-Fa-f]
     var $$;
-    // => [0-af] # Choice
+    // => [0-9A-Fa-f] # Choice
     switch (_getState(_transitions32)) {
-      // [0-a] [f]
+      // [0-9] [A-F] [a-f]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => [0-af]
+        // => [0-9A-Fa-f]
         $$ = _matchMapping(48, 102, _mapping3);
-        // <= [0-af]
+        // <= [0-9A-Fa-f]
         _startPos = startPos0;
         break;
       // No matches
@@ -4927,7 +4927,7 @@ class PParser {
       // Expected: 
       _failure(const [null]);
     }
-    // <= [0-af] # Choice
+    // <= [0-9A-Fa-f] # Choice
     return $$;
   }
   
@@ -4937,7 +4937,7 @@ class PParser {
     var $$;
     // => hexadecimal_digit+ # Choice
     switch (_getState(_transitions32)) {
-      // [0-a] [f]
+      // [0-9] [A-F] [a-f]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
@@ -5059,7 +5059,7 @@ class PParser {
     var $$;
     // => hexadecimal_digit hexadecimal_escape_sequence1 / '' # Choice
     switch (_getState(_transitions33)) {
-      // [\u0000-/] [b-e] [g-\u0010ffff]
+      // [\u0000-/] [:-@] [G-`] [g-\u0010ffff]
       // EOF
       case 0:
       case 3:
@@ -5071,7 +5071,7 @@ class PParser {
         // <= ''
         _startPos = startPos0;
         break;
-      // [0-a] [f]
+      // [0-9] [A-F] [a-f]
       case 1:
         while (true) {
           // => hexadecimal_digit hexadecimal_escape_sequence1 # Sequence
@@ -5304,7 +5304,7 @@ class PParser {
         _startPos = startPos0;
         // <= hexadecimal_digit_sequence? '.' hexadecimal_digit_sequence # Sequence
         break;
-      // [0-a] [f]
+      // [0-9] [A-F] [a-f]
       case 1:
         while (true) {
           // => hexadecimal_digit_sequence? '.' hexadecimal_digit_sequence # Sequence

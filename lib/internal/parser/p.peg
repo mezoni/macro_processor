@@ -477,7 +477,7 @@ hexadecimal_constant1 <-
   / ''
 
 hexadecimal_digit <-
-  [0-af]
+  [0-9a-fA-F]
 
 hexadecimal_digit_sequence <-
   hexadecimal_digit+ { $$ = _text(); }
