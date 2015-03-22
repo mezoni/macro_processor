@@ -88,11 +88,11 @@ class _ExpressionEvaluator extends GeneralVisitor {
       case "&&":
         _checkIntegerValue(lvalue, left.position);
         _checkIntegerValue(rvalue, right.position);
-        return lvalue && rvalue;
+        return (lvalue != 0 && rvalue != 0) ? 1 : 0;
       case "||":
         _checkIntegerValue(lvalue, left.position);
         _checkIntegerValue(rvalue, right.position);
-        return lvalue || rvalue;
+        return (lvalue != 0 || rvalue != 0) ? 1 : 0;
       default:
         throw new FormatException("Unknown binary operation", _source, node.position);
     }

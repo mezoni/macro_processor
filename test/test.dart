@@ -76,8 +76,8 @@ ABC
 
 #define OS windows
 
-#if OS != windows
-#error OS != windows
+#if OS != windows || OS != windows
+#error OS != windows || OS != windows
 #endif
 
 #if 1L != 1uL
