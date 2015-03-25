@@ -5,13 +5,20 @@ import "dart:math";
 
 import "package:macro_processor/internal/ast/ast.dart";
 
-Expression _binary(left, _Node node, int position) {
-  if (node == null) {
-    return left;
+Expression _buildBinary(Expression first, List rest) {
+  Expression builder(Expression result, List element) {
+    return new BinaryExpression(left: result, operator: element[0], position: result.position, right: element[1]);
+  };
+  return _buildTree(first, rest, builder);        
+}
+
+Expression _buildTree(Expression first, List rest, builder(Expression result, List rest)) {
+  var result = first;    
+  for (var i = 0; i < rest.length; i++) {
+    result = builder(result, rest[i]);
   }
-  var right = _binary(node.operand, node.next, position);
-  return new BinaryExpression(left: left, operator: node.operator, position: position, right: right);  
- }
+  return result;
+}
 
 Expression _conditional(Expression condition, Expression success, Expression fail, int position) {  
   return new ConditionalExpression(condition: condition, success: success, fail: fail, position: position);
@@ -101,30 +108,6 @@ Expression _unary(String operator, Expression operand, int position) {
   return new UnaryExpression(operand: operand, operator: operator, position: position);
 }
 
-class _Node {
-  final _Node next;
-
-  final dynamic operand;
-  
-  final String operator;
-  
-  final int position;  
-  
-  _Node(this.operator, this.operand, this.next, this.position);
-  
-  String toString() {
-    var sb = new StringBuffer();
-    sb.write(operator);
-    sb.write(" ");
-    sb.write(operand);
-    if (next != null) {
-      sb.write(" ");
-      sb.write(next);    
-    }
-    return sb.toString();
-  }
-}
-
 }%
 
 ### Sentences (nonterminals) ###
@@ -156,34 +139,34 @@ conditional_expression <-
   / logical_or_expression
 
 logical_or_expression <-
-  logical_and_expression logical_or_expression1 { $$ = _binary($1, $2, $start); }
+  logical_and_expression (vertical_line2 logical_and_expression)* { $$ = _buildBinary($1, $2); }
 
 logical_and_expression <-
-  inclusive_or_expression logical_and_expression1 { $$ = _binary($1, $2, $start); }
+  inclusive_or_expression (ampersand2 inclusive_or_expression)* { $$ = _buildBinary($1, $2); }
 
 inclusive_or_expression <-
-  exclusive_or_expression inclusive_or_expression1 { $$ = _binary($1, $2, $start); }
+  exclusive_or_expression (vertical_line exclusive_or_expression)* { $$ = _buildBinary($1, $2); }
 
 exclusive_or_expression <-
-  and_expression exclusive_or_expression1 { $$ = _binary($1, $2, $start); }
+  and_expression (xor and_expression)* { $$ = _buildBinary($1, $2); }
 
 and_expression <-
-  equality_expression and_expression1 { $$ = _binary($1, $2, $start); }
+  equality_expression (ampersand equality_expression)* { $$ = _buildBinary($1, $2); }
 
 equality_expression <-
-  relational_expression equality_expression1 { $$ = _binary($1, $2, $start); }
+  relational_expression (equality_operator relational_expression)* { $$ = _buildBinary($1, $2); }
 
 relational_expression <-
-  shift_expression relational_expression1 { $$ = _binary($1, $2, $start); }
+  shift_expression (relational_operator shift_expression)* { $$ = _buildBinary($1, $2); }
 
 shift_expression <-
-  additive_expression shift_expression1 { $$ = _binary($1, $2, $start); }
+  additive_expression (shift_operator additive_expression)* { $$ = _buildBinary($1, $2); }
 
 additive_expression <-
-  multiplicative_expression additive_expression1 { $$ = _binary($1, $2, $start); }
+  multiplicative_expression (additive_operator multiplicative_expression)* { $$ = _buildBinary($1, $2); }
 
 multiplicative_expression <-
-  unary_expression multiplicative_expression1 { $$ = _binary($1, $2, $start); }
+  unary_expression (multiplicative_operator unary_expression)* { $$ = _buildBinary($1, $2); }
 
 unary_expression <-
   primary_expression
@@ -200,47 +183,6 @@ defined <-
 
 expression <-
   conditional_expression
-
-multiplicative_expression1 <-
-  multiplicative_operator unary_expression multiplicative_expression1 { $$ = new _Node($1, $2, $3, $start); }
-  / '' { $$ = null; }
-
-additive_expression1 <-
-  additive_operator multiplicative_expression additive_expression1 { $$ = new _Node($1, $2, $3, $start); }
-  / '' { $$ = null; }
-
-shift_expression1 <-
-  shift_operator additive_expression shift_expression1 { $$ = new _Node($1, $2, $3, $start); }
-  / '' { $$ = null; }
-
-relational_expression1 <-
-  relational_operator shift_expression relational_expression1 { $$ = new _Node($1, $2, $3, $start); }
-  / '' { $$ = null; }
-
-equality_expression1 <-
-  eq relational_expression equality_expression1 { $$ = new _Node($1, $2, $3, $start); }
-  / neq relational_expression equality_expression1 { $$ = new _Node($1, $2, $3, $start); }
-  / '' { $$ = null; }
-
-and_expression1 <-
-  ampersand equality_expression and_expression1 { $$ = new _Node($1, $2, $3, $start); }
-  / '' { $$ = null; }
-
-exclusive_or_expression1 <-
-  xor and_expression exclusive_or_expression1 { $$ = new _Node($1, $2, $3, $start); }
-  / '' { $$ = null; }
-
-inclusive_or_expression1 <-
-  vertical_line exclusive_or_expression inclusive_or_expression1 { $$ = new _Node($1, $2, $3, $start); }
-  / '' { $$ = null; }
-
-logical_and_expression1 <-
-  ampersand2 inclusive_or_expression logical_or_expression1 { $$ = new _Node($1, $2, $3, $start); }
-  / '' { $$ = null; }
-
-logical_or_expression1 <-
-  vertical_line2 logical_and_expression logical_or_expression1 { $$ = new _Node($1, $2, $3, $start); }
-  / '' { $$ = null; }
 
 elif_groups <-
   elif_group+
@@ -320,8 +262,9 @@ else <-
 eof <-
   !.
 
-eq <-
-  '==' spaces { $$ = $1; }
+equality_operator <-
+  eq
+  / neq
 
 error <-
   '#error' spaces { $$ = $1; }
@@ -345,9 +288,6 @@ multiplicative_operator <-
   asterisk
   / slash
   / percent
-
-neq <-
-  '!=' spaces { $$ = $1; }
 
 new_line <-
   '\r\n'
@@ -437,6 +377,9 @@ digit <-
 digit_sequence <-
   digit+ { $$ = _text(); }
 
+eq <-
+  '==' spaces { $$ = $1; }
+
 escape_sequence <-
   simple_escape_sequence
   / octal_escape_sequence
@@ -477,7 +420,7 @@ hexadecimal_constant1 <-
   / ''
 
 hexadecimal_digit <-
-  [0-9a-fA-F]
+  [0-9A-Fa-f]
 
 hexadecimal_digit_sequence <-
   hexadecimal_digit+ { $$ = _text(); }
@@ -541,7 +484,10 @@ lte <-
   '<=' spaces { $$ = $1; }
 
 minus <-
-  '+' spaces { $$ = $1; }
+  '-' spaces { $$ = $1; }
+
+neq <-
+  '!=' spaces { $$ = $1; }
 
 nondigit <-
   [A-Z_a-z]

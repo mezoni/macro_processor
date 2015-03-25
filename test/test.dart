@@ -25,6 +25,10 @@ void main() {
 }
 
 String text = '''
+#if 2 - 1 - 1 != 0
+#error 2 - 1 - 1 != 0
+#endif 
+
 2 + 2
 
 // Comment
