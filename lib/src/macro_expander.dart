@@ -13,7 +13,8 @@ class _MacroExpander {
     return _expand(name, definitions, defaultValue, new Set<String>());
   }
 
-  String _expand(String name, Map<String, List<SourceFragment>> definitions, String defaultValue, Set<String> processed) {
+  String _expand(
+      String name, Map<String, List<SourceFragment>> definitions, String defaultValue, Set<String> processed) {
     if (processed.contains(name)) {
       return name;
     }
@@ -34,8 +35,8 @@ class _MacroExpander {
 
     var buffer = new StringBuffer();
     for (var fragment in defintion) {
-      if (fragment.name != null) {
-        buffer.write(_expand(fragment.name, definitions, defaultValue, processed));
+      if (fragment.value is Symbol) {
+        buffer.write(_expand(fragment.text, definitions, defaultValue, processed));
       } else {
         buffer.write(fragment.text);
       }

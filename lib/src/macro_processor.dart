@@ -1,9 +1,10 @@
 part of preprocessor;
 
 class MacroProcessor {
-  List<TextBlock> process(String source, Map<String, String> environment, {bool expand: true}) {
+  List<TextBlock> process(String filename, Map<String, String> files,
+      {Map<String, List<SourceFragment>> definitions, Map<String, dynamic> environment}) {
     var processor = new _MacroProcessor();
-    return processor.process(source, environment: environment, expand: expand);
+    return processor.process(filename, files, definitions: definitions, environment: environment);
   }
 }
 
@@ -16,26 +17,46 @@ class _MacroProcessor extends GeneralVisitor {
 
   bool _expand;
 
+  String _filename;
+
+  Map<String, String> _files;
+
   String _source;
 
-  List<TextBlock> process(String source, {Map<String, String> environment, bool expand: true}) {
-    if (source == null) {
-      throw new ArgumentError.notNull("source");
+  List<TextBlock> process(String filename, Map<String, String> files,
+      {Map<String, List<SourceFragment>> definitions, Map<String, dynamic> environment}) {
+    if (filename == null) {
+      throw new ArgumentError.notNull("filename");
     }
 
-    if (expand == null) {
-      throw new ArgumentError.notNull("expand");
+    if (files == null) {
+      throw new ArgumentError.notNull("files");
     }
 
-    _expand = expand;
-    _source = source;
+    if (environment == null) {
+      environment = <String, dynamic>{};
+    }
+
+    if (definitions == null) {
+      definitions = <String, List<SourceFragment>>{};
+    }
+
+    _definitions = definitions;
+    _environment = environment;
+    _expand = true;
+    _filename = filename;
+    _files = files;
+    _source = _files[_filename];
+    if (_source == null) {
+      throw new StateError("File not found: $_filename");
+    }
+
     var parser = new Parser();
-    var file = parser.parsePreprocessingFile(source);
-    _definitions = <String, dynamic>{};
+    var file = parser.parsePreprocessingFile(_source);
     if (environment != null) {
       for (var key in environment.keys) {
         var value = environment[key];
-        if (value is! String) {
+        if (!(value is String || value is int || value is double || value is Symbol)) {
           throw new ArgumentError("Illegal type of environment variable '$key': ${value.runtimeType}");
         }
 
@@ -52,12 +73,13 @@ class _MacroProcessor extends GeneralVisitor {
 
     var prev = _blocks.first;
     var end = prev.length;
+    filename = prev.filename;
     var start = 0;
     var result = <TextBlock>[prev];
     for (var i = 1; i < length; i++) {
       var block = _blocks[i];
-      if (end == block.position) {
-        var newBlock = new TextBlock(prev.text + block.text, start);
+      if (end == block.position && block.filename == filename) {
+        var newBlock = new TextBlock(prev.text + block.text, start, filename: filename);
         result[result.length - 1] = newBlock;
         end += block.length;
         prev = newBlock;
@@ -66,6 +88,7 @@ class _MacroProcessor extends GeneralVisitor {
         end = start + block.length;
         result.add(block);
         prev = block;
+        filename = prev.filename;
       }
     }
 
@@ -74,7 +97,12 @@ class _MacroProcessor extends GeneralVisitor {
 
   Object visitDefineDirective(DefineDirective node) {
     var key = node.identifier.name;
-    _definitions[key] = node.replacement;
+    var fragments = node.replacement;
+    for (var fragment in fragments) {
+      fragment.filename = _filename;
+    }
+
+    _definitions[key] = fragments;
     return null;
   }
 
@@ -143,6 +171,14 @@ class _MacroProcessor extends GeneralVisitor {
     return null;
   }
 
+  visitIncludeDirective(IncludeDirective node) {
+    var header = node.header;
+    var filename = header.substring(1, header.length - 1);
+    var processor = new MacroProcessor();
+    var blocks = processor.process(filename, _files, definitions: _definitions);
+    _blocks.addAll(blocks);
+  }
+
   Object visitNode(AstNode node) {
     throw new FormatException("Syntax error", _source, node.position);
   }
@@ -159,17 +195,17 @@ class _MacroProcessor extends GeneralVisitor {
     if (fragments != null) {
       var expander = new _MacroExpander();
       for (var fragment in fragments) {
-        var name = fragment.name;
+        var value = fragment.value;
         var text = fragment.text;
-        if (name != null && _expand) {
-          text = expander.expand(name, _definitions, "");
+        if (value is Symbol && _expand) {
+          text = expander.expand(text, _definitions, "");
         }
 
         buffer.write(text);
       }
     }
 
-    var block = new TextBlock(buffer.toString(), node.position);
+    var block = new TextBlock(buffer.toString(), node.position, filename: _filename);
     _blocks.add(block);
     return null;
   }

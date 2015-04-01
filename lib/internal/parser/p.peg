@@ -200,6 +200,7 @@ control_line <-
   define_directive
   / undef_directive
   / error_directive
+  / include_directive
 
 define_directive <-
   define identifier replacement_list new_line? { $$ = new DefineDirective(identifier: $2, replacement: $3, position: $start); }
@@ -227,7 +228,7 @@ source_line <-
   / new_line_fragment { $$ = _sourceLine([$1], null, $start); }
 
 new_line_fragment <-
-  new_line { $$ = new SourceFragment(position: $start, text: _text()); }
+  new_line { $$ = new SourceFragment(position: $start, text: _text(), value: _text()); }
 
 eval_line <-
   constant_expression (new_line / eof) { $$ = $1; }
@@ -281,6 +282,9 @@ ifdef <-
 ifndef <-
   '#ifndef' spaces { $$ = $1; }
 
+include_directive <-
+  include header { $$ = new IncludeDirective(header: $2, name: $1, position: $start); }
+
 lparen <-
   '(' spaces { $$ = $1; }
 
@@ -313,10 +317,10 @@ shift_operator <-
   / rsh
 
 source_fragment <-
-  string_literal_base { $$ = new SourceFragment(position: $start, text: _text()); }
-  / constant_base { $$ = new SourceFragment(position: $start, text: _text()); }
-  / identifier_base { $$ = new SourceFragment(name: _text(), position: $start, text: _text()); }
-  / !('\r\n' / [\n\r]) . { $$ = new SourceFragment(position: $start, text: _text()); }
+  string_literal_base { $$ = new SourceFragment(position: $start, text: _text(), value: $1.value); }
+  / constant_base { $$ = new SourceFragment(position: $start, text: _text(), value: $1.value); }
+  / identifier_base { $$ = new SourceFragment(position: $start, text: _text(), value: new Symbol($1.name)); }
+  / !('\r\n' / [\n\r]) . { $$ = new SourceFragment(position: $start, text: _text(), value: _text()); }
 
 unary_operator <-
   plus
@@ -392,6 +396,9 @@ exclamation <-
 exponent_part <-
   ('e' / 'E') (sign / '') digit_sequence { $$ = _text(); }
 
+file_name <-
+  [.0-9A-Z_a-z]+ { $$ = _text(); }
+
 floating_constant_base <-
   decimal_floating_constant
   / hexadecimal_floating_constant
@@ -408,6 +415,12 @@ gt <-
 
 gte <-
   '>=' spaces { $$ = $1; }
+
+header <-
+  header_name spaces { $$ = $1; }
+
+header_name <-
+  '<' file_name ('/' file_name)* '>' { $$ = _text(); }
 
 hex_quad <-
   hexadecimal_digit hexadecimal_digit hexadecimal_digit hexadecimal_digit { $$ = _text(); }
@@ -455,6 +468,9 @@ identifier_base1 <-
 identifier_nondigit <-
   nondigit
   / universal_character_name
+
+include <-
+  '#include' spaces { $$ = $1; }
 
 integer_constant_base <-
   decimal_constant integer_suffix? { $$ = new IntegerLiteral(position: $start, text: _text(), value: $1); }

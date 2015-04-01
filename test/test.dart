@@ -5,26 +5,26 @@ void main() {
   group("Macro processor.", () {
     test("Directive syntax.", () {
       var processor = new MacroProcessor();
-      var blocks = processor.process(text, {});
+      var files = {"text1": text1};
+      var blocks = processor.process("text1", files);
     });
 
     test("Produced result.", () {
+      var files = {"text2": text2};
       var processor = new MacroProcessor();
-      var blocks = processor.process(text2, {
-        "OS": "windows"
-      });
+      var blocks = processor.process("text2", files, environment: {"OS": "windows"});
+
       var result = blocks.map((e) => e.text).join();
       expect(result, "Hello windows\n1E2 YEE!");
-      blocks = processor.process(text2, {
-        "OS": "linux"
-      });
+      blocks = processor.process("text2", files, environment: {"OS": "linux"});
+
       result = blocks.map((e) => e.text).join();
       expect(result, "Hello linux\nBye windows!\n1E2 YEE!");
     });
   });
 }
 
-String text = '''
+String text1 = '''
 #if 2 - 1 - 1 != 0
 #error 2 - 1 - 1 != 0
 #endif 

@@ -1,11 +1,13 @@
 part of preprocessor;
 
 class TextBlock {
+  final String filename;
+
   final int position;
 
   final String text;
 
-  TextBlock(this.text, this.position) {
+  TextBlock(this.text, this.position, {this.filename}) {
     if (text == null) {
       throw new ArgumentError.notNull("text");
     }

@@ -7,9 +7,9 @@ class GeneralVisitor<T> implements Visitor<T> {
 
   T visitConditionalExpression(ConditionalExpression node) => visitNode(node);
 
-  T visitDefineDirective(DefineDirective node) => visitNode(node);
-
   T visitDefinedExpression(DefinedExpression node) => visitNode(node);
+
+  T visitDefineDirective(DefineDirective node) => visitNode(node);
 
   T visitElseDirective(ElseDirective node) => visitNode(node);
 
@@ -24,6 +24,8 @@ class GeneralVisitor<T> implements Visitor<T> {
   T visitIfDirective(IfDirective node) => visitNode(node);
 
   T visitIfSection(IfSection node) => visitNode(node);
+
+  T visitIncludeDirective(IncludeDirective node) => visitNode(node);
 
   T visitIntegerLiteral(IntegerLiteral node) => visitNode(node);
 
@@ -81,19 +83,19 @@ class PrintVisitor implements Visitor<Object> {
     return null;
   }
 
+  Object visitDefinedExpression(DefinedExpression node) {
+    buffer.write("defined(");
+    node.identifier.accept(this);
+    buffer.write(")");
+    return null;
+  }
+
   Object visitDefineDirective(DefineDirective node) {
     buffer.write(node.name);
     buffer.write(" ");
     node.identifier.accept(this);
     buffer.write(" ");
     _visitNodes(node.replacement);
-    return null;
-  }
-
-  Object visitDefinedExpression(DefinedExpression node) {
-    buffer.write("defined(");
-    node.identifier.accept(this);
-    buffer.write(")");
     return null;
   }
 
@@ -161,6 +163,13 @@ class PrintVisitor implements Visitor<Object> {
     return null;
   }
 
+  Object visitIncludeDirective(IncludeDirective node) {
+    buffer.write(node.name);
+    buffer.write(" ");
+    buffer.write(node.header);
+    return null;
+  }
+
   Object visitIntegerLiteral(IntegerLiteral node) {
     buffer.write(node.text);
     return null;
@@ -224,9 +233,9 @@ abstract class Visitor<T> {
 
   T visitConditionalExpression(ConditionalExpression node);
 
-  T visitDefineDirective(DefineDirective node);
-
   T visitDefinedExpression(DefinedExpression node);
+
+  T visitDefineDirective(DefineDirective node);
 
   T visitElseDirective(ElseDirective node);
 
@@ -241,6 +250,8 @@ abstract class Visitor<T> {
   T visitIfDirective(IfDirective node);
 
   T visitIfSection(IfSection node);
+
+  T visitIncludeDirective(IncludeDirective node);
 
   T visitIntegerLiteral(IntegerLiteral node);
 

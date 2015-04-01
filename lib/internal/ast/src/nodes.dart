@@ -20,8 +20,7 @@ abstract class AstNode {
     return buffer.toString();
   }
 
-  void visitChildren(Visitor visitor) {
-  }
+  void visitChildren(Visitor visitor) {}
 }
 
 class AstNodeTypes {
@@ -47,13 +46,15 @@ class AstNodeTypes {
 
   static const AstNodeTypes IF_DIRECTIVE = const AstNodeTypes("IF_DIRECTIVE");
 
+  static const AstNodeTypes IF_SECTION = const AstNodeTypes("IF_SECTION");
+
+  static const AstNodeTypes INCLUDE_DIRECTIVE = const AstNodeTypes("INCLUDE_DIRECTIVE");
+
+  static const AstNodeTypes INTEGER_LITERAL = const AstNodeTypes("INTEGER_LITERAL");
+
   static const AstNodeTypes SOURCE_FRAGMENT = const AstNodeTypes("SOURCE_FRAGMENT");
 
   static const AstNodeTypes SOURCE_LINE = const AstNodeTypes("SOURCE_LINE");
-
-  static const AstNodeTypes IF_SECTION = const AstNodeTypes("IF_SECTION");
-
-  static const AstNodeTypes INTEGER_LITERAL = const AstNodeTypes("INTEGER_LITERAL");
 
   static const AstNodeTypes PARENTHESIS_EXPRESSION = const AstNodeTypes("PARENTHESIS_EXPRESSION");
 
@@ -125,6 +126,22 @@ class ConditionalExpression extends Expression {
   }
 }
 
+class DefinedExpression extends Expression {
+  final Identifier identifier;
+
+  DefinedExpression({this.identifier, int position}) : super(position: position);
+
+  AstNodeTypes get type => AstNodeTypes.DEFINE_EXPRESSION;
+
+  dynamic accept(Visitor visitor) {
+    return visitor.visitDefinedExpression(this);
+  }
+
+  void visitChildren(Visitor visitor) {
+    identifier.accept(visitor);
+  }
+}
+
 class DefineDirective extends Directive {
   final Identifier identifier;
 
@@ -145,22 +162,6 @@ class DefineDirective extends Directive {
     for (var token in replacement) {
       token.accept(visitor);
     }
-  }
-}
-
-class DefinedExpression extends Expression {
-  final Identifier identifier;
-
-  DefinedExpression({this.identifier, int position}) : super(position: position);
-
-  AstNodeTypes get type => AstNodeTypes.DEFINE_EXPRESSION;
-
-  dynamic accept(Visitor visitor) {
-    return visitor.visitDefinedExpression(this);
-  }
-
-  void visitChildren(Visitor visitor) {
-    identifier.accept(visitor);
   }
 }
 
@@ -306,6 +307,20 @@ class IfSection extends AstNode {
   }
 }
 
+class IncludeDirective extends Directive {
+  final String header;
+
+  final String name;
+
+  IncludeDirective({this.header, this.name, int position}) : super(position: position);
+
+  AstNodeTypes get type => AstNodeTypes.INCLUDE_DIRECTIVE;
+
+  dynamic accept(Visitor visitor) {
+    return visitor.visitIncludeDirective(this);
+  }
+}
+
 class IntegerLiteral extends Literal {
   final int value;
 
@@ -363,11 +378,13 @@ class PreprocessingFile extends AstNode {
 }
 
 class SourceFragment extends AstNode {
-  final String name;
+  String filename;
 
   final String text;
 
-  SourceFragment({this.name, this.text, int position}) : super(position: position);
+  final dynamic value;
+
+  SourceFragment({int position, this.text, this.value}) : super(position: position);
 
   AstNodeTypes get type => AstNodeTypes.SOURCE_FRAGMENT;
 

@@ -1,3 +1,8 @@
+## 0.0.7
+
+- Breaking changes. Changed method signature `MacroProcessor.process()`
+- Initial support of directive `#include`
+
 ## 0.0.6
 
 - Fixed bug in `p.peg` grammar
