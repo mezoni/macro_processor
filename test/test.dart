@@ -25,6 +25,21 @@ void main() {
 }
 
 String text1 = '''
+#define OS windows
+
+#if OS != windows || OS != windows
+#error OS != windows || OS != windows
+#endif
+
+#if !defined(X)
+#endif
+
+#define SOME
+#define COND !defined(SOME)
+#if COND
+#error COND
+#endif
+
 #if 2 - 1 - 1 != 0
 #error 2 - 1 - 1 != 0
 #endif 
@@ -76,12 +91,6 @@ ABC
 
 #if windows != windows
 #error windows != windows
-#endif
-
-#define OS windows
-
-#if OS != windows || OS != windows
-#error OS != windows || OS != windows
 #endif
 
 #if 1L != 1uL
@@ -170,7 +179,6 @@ ABC
 #if 0x09abcdef != 0x09abcdef
 #error 0x09abcdef != 0x09abcdef
 #endif
-
 a''';
 
 String text2 = '''

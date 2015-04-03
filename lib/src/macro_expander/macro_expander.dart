@@ -1,24 +1,23 @@
 part of macro_processor.macro_expander;
 
 class MacroExpander {
-  String expand(String name, Map<String, MacroDefinition> definitions, String defaultValue) {
-    if (name == null) {
-      throw new ArgumentError.notNull("name");
+  String expand(List fragments, Map<String, MacroDefinition> definitions) {
+    if (fragments == null) {
+      throw new ArgumentError.notNull("fragments");
     }
 
     if (definitions == null) {
       throw new ArgumentError.notNull("definitions");
     }
 
-    return _expand(name, definitions, defaultValue, new Set<String>());
+    return _expandFragments(fragments, definitions, new Set<String>());
   }
 
-  String _expand(String name, Map<String, MacroDefinition> definitions, String defaultValue, Set<String> processed) {
+  String _expandFragment(String name, Map<String, MacroDefinition> definitions, Set<String> processed) {
     if (processed.contains(name)) {
       return name;
     }
 
-    processed.add(name);
     var defintion = definitions[name];
     if (defintion == null) {
       return name;
@@ -26,21 +25,51 @@ class MacroExpander {
 
     var fragments = defintion.fragments;
     if (fragments.isEmpty) {
-      if (defaultValue != null) {
-        return defaultValue;
-      }
-
       return name;
     }
 
+    processed.add(name);
     var buffer = new StringBuffer();
+    var expand = true;
     for (var fragment in fragments) {
       if (fragment is Symbol) {
         fragment = _symbolToString(fragment);
-        buffer.write(_expand(fragment, definitions, defaultValue, processed));
-      } else {
-        buffer.write(fragment);
+        if (!expand) {
+          expand = true;
+        } else {
+          if (fragment == "defined") {
+            expand = false;
+          } else {
+            fragment = _expandFragment(fragment, definitions, processed);
+          }
+        }
       }
+
+      buffer.write(fragment);
+    }
+
+    processed.remove(name);
+    return buffer.toString();
+  }
+
+  String _expandFragments(List fragments, Map<String, MacroDefinition> definitions, Set<String> processed) {
+    var buffer = new StringBuffer();
+    var expand = true;
+    for (var fragment in fragments) {
+      if (fragment is Symbol) {
+        fragment = _symbolToString(fragment);
+        if (!expand) {
+          expand = true;
+        } else {
+          if (fragment == "defined") {
+            expand = false;
+          } else {
+            fragment = _expandFragment(fragment, definitions, processed);
+          }
+        }
+      }
+
+      buffer.write(fragment);
     }
 
     return buffer.toString();

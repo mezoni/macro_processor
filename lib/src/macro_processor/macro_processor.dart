@@ -254,31 +254,22 @@ class _MacroProcessor extends GeneralVisitor {
   }
 
   String _expand(List<SourceFragment> fragments, [String defaultValue = ""]) {
-    var buffer = new StringBuffer();
+    var expander = new MacroExpander();
     if (fragments != null) {
-      var expander = new MacroExpander();
-      var expand = true;
+      var data = [];
       for (var fragment in fragments) {
         var value = fragment.value;
-        var text = fragment.text;
         if (value is Symbol) {
-          text = _symbolToString(value);
-          if (!expand) {
-            expand = true;
-          } else {
-            if (text == "defined") {
-              expand = false;
-            } else {
-              text = expander.expand(text, _definitions, defaultValue);
-            }
-          }
+          data.add(value);
+        } else {
+          data.add(fragment.text);
         }
-
-        buffer.write(text);
       }
+
+      return expander.expand(data, _definitions);
     }
 
-    return buffer.toString();
+    return "";
   }
 
   String _symbolToString(Symbol symbol) {
