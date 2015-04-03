@@ -1,4 +1,4 @@
-part of preprocessor.internal.ast;
+part of macro_processor.internal.ast;
 
 class GeneralVisitor<T> implements Visitor<T> {
   T visitBinaryExpression(BinaryExpression node) => visitNode(node);
@@ -95,7 +95,7 @@ class PrintVisitor implements Visitor<Object> {
     buffer.write(" ");
     node.identifier.accept(this);
     buffer.write(" ");
-    _visitNodes(node.replacement);
+    _visitNodes(node.fragments);
     return null;
   }
 
@@ -131,7 +131,7 @@ class PrintVisitor implements Visitor<Object> {
   Object visitIfDirective(IfDirective node) {
     buffer.write(node.name);
     buffer.write(" ");
-    node.condition.accept(this);
+    _visitNodes(node.condition);
     var tokens = node.body;
     if (tokens != null) {
       buffer.writeln();

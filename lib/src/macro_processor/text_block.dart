@@ -1,4 +1,4 @@
-part of preprocessor;
+part of macro_processor;
 
 class TextBlock {
   final String filename;

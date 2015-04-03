@@ -1,9 +1,5 @@
 %{
-library preprocessor.internal.parser.p_parser;
-
-import "dart:math";
-
-import "package:macro_processor/internal/ast/ast.dart";
+part of macro_processor.internal.parsers.expression_parser;
 
 Expression _buildBinary(Expression first, List rest) {
   Expression builder(Expression result, List element) {
@@ -112,25 +108,6 @@ Expression _unary(String operator, Expression operand, int position) {
 
 ### Sentences (nonterminals) ###
 
-preprocessing_file <-
-  group? eof { $$ = new PreprocessingFile(groups: $1, position: $start); }
-
-group <-
-  group_part+
-
-group_part <-
-  if_section
-  / control_line
-  / text_line
-
-if_section <-
-  if_group elif_groups? else_group? endif_line { $$ = new IfSection(ifGroup: $1, elifGroups: $2, elseGroup: $3, endifLine: $4, position: $start); }
-
-if_group <-
-  if constant_expression new_line group? { $$ = new IfDirective(body: $4, condition: $2, name: $1, position: $start); }
-  / ifdef identifier new_line group? { $$ = new IfDirective(body: $4, condition: $2, name: $1, position: $start); }
-  / ifndef identifier new_line group? { $$ = new IfDirective(body: $4, condition: $2, name: $1, position: $start); }
-
 constant_expression <-
   conditional_expression
 
@@ -184,52 +161,6 @@ defined <-
 expression <-
   conditional_expression
 
-elif_groups <-
-  elif_group+
-
-elif_group <-
-  elif constant_expression new_line group? { $$ = new IfDirective(body: $4, condition: $2, name: $1, position: $start); }
-
-else_group <-
-  else new_line group? { $$ = new ElseDirective(body: $3, position: $start); }
-
-endif_line <-
-  '#endif' new_line? { $$ = new EndifDirective(position: $start); }
-
-control_line <-
-  define_directive
-  / undef_directive
-  / error_directive
-  / include_directive
-
-define_directive <-
-  define identifier replacement_list new_line? { $$ = new DefineDirective(identifier: $2, replacement: $3, position: $start); }
-
-replacement_list <-
-  source_fragment*
-
-undef_directive <-
-  undef identifier new_line? { $$ = new UndefDirective(identifier: $2, position: $start); }
-
-error_directive <-
-  error any_chars_until_eol new_line? { $$ = new ErrorDirective(message: $2, position: $start); }
-
-any_chars_until_eol <-
-  any_char_until_eol* { $$ = _text(); }
-
-any_char_until_eol <-
-  !new_line . { $$ = $2; }
-
-text_line <-
-  !'#' source_line { $$ = $2; }
-
-source_line <-
-  source_fragment+ new_line_fragment? { $$ = _sourceLine($1, $2, $start); }
-  / new_line_fragment { $$ = _sourceLine([$1], null, $start); }
-
-new_line_fragment <-
-  new_line { $$ = new SourceFragment(position: $start, text: _text(), value: _text()); }
-
 eval_line <-
   constant_expression (new_line / eof) { $$ = $1; }
 
@@ -251,15 +182,6 @@ ampersand2 <-
 constant <-
   constant_base spaces2 { $$ = $1; }
 
-define <-
-  '#define' spaces { $$ = $1; }
-
-elif <-
-  '#elif' spaces { $$ = $1; }
-
-else <-
-  '#else' spaces { $$ = $1; }
-
 eof <-
   !.
 
@@ -267,23 +189,8 @@ equality_operator <-
   eq
   / neq
 
-error <-
-  '#error' spaces { $$ = $1; }
-
 identifier <-
   identifier_base spaces2 { $$ = $1; }
-
-if <-
-  '#if' spaces { $$ = $1; }
-
-ifdef <-
-  '#ifdef' spaces { $$ = $1; }
-
-ifndef <-
-  '#ifndef' spaces { $$ = $1; }
-
-include_directive <-
-  include header { $$ = new IncludeDirective(header: $2, name: $1, position: $start); }
 
 lparen <-
   '(' spaces { $$ = $1; }
@@ -316,20 +223,11 @@ shift_operator <-
   lsh
   / rsh
 
-source_fragment <-
-  string_literal_base { $$ = new SourceFragment(position: $start, text: _text(), value: $1.value); }
-  / constant_base { $$ = new SourceFragment(position: $start, text: _text(), value: $1.value); }
-  / identifier_base { $$ = new SourceFragment(position: $start, text: _text(), value: new Symbol($1.name)); }
-  / !('\r\n' / [\n\r]) . { $$ = new SourceFragment(position: $start, text: _text(), value: _text()); }
-
 unary_operator <-
   plus
   / minus
   / tilde
   / exclamation
-
-undef <-
-  '#undef' spaces { $$ = $1; }
 
 vertical_line <-
   '|' spaces { $$ = $1; }
@@ -396,9 +294,6 @@ exclamation <-
 exponent_part <-
   ('e' / 'E') (sign / '') digit_sequence { $$ = _text(); }
 
-file_name <-
-  [.0-9A-Z_a-z]+ { $$ = _text(); }
-
 floating_constant_base <-
   decimal_floating_constant
   / hexadecimal_floating_constant
@@ -415,12 +310,6 @@ gt <-
 
 gte <-
   '>=' spaces { $$ = $1; }
-
-header <-
-  header_name spaces { $$ = $1; }
-
-header_name <-
-  '<' file_name ('/' file_name)* '>' { $$ = _text(); }
 
 hex_quad <-
   hexadecimal_digit hexadecimal_digit hexadecimal_digit hexadecimal_digit { $$ = _text(); }
@@ -468,9 +357,6 @@ identifier_base1 <-
 identifier_nondigit <-
   nondigit
   / universal_character_name
-
-include <-
-  '#include' spaces { $$ = $1; }
 
 integer_constant_base <-
   decimal_constant integer_suffix? { $$ = new IntegerLiteral(position: $start, text: _text(), value: $1); }
@@ -535,13 +421,6 @@ plus <-
 rsh <-
   '<<' spaces { $$ = $1; }
 
-s_char <-
-  ![\n\r"\\] . { $$ = $2.codeUnitAt(0); }
-  / escape_sequence
-
-s_char_sequence <-
-  s_char+
-
 sign <-
   [+\-]
 
@@ -556,10 +435,6 @@ spaces <-
 
 spaces2 <-
   spaces
-
-string_literal_base <-
-  '"' s_char_sequence? '"' { $$ = _stringLiteral(_text(), $2, $start); }
-  / 'L"' s_char_sequence? '"' { $$ = _stringLiteral(_text(), $2, $start); }
 
 tilde <-
   '~' spaces { $$ = $1; }

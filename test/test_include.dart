@@ -20,13 +20,23 @@ String header1 = '''
 1
 2
 abc
+TWO
 
 #define Foo foo
+
+#define A (1
+#define B == 0)
+#define C A B
+
+#if C
+#error 1 == 0
+#endif
 
 #endif
 ''';
 
 String header2 = '''
+
 #if !defined(HEADER2)
 #define HEADER2
 

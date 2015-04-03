@@ -1,17 +1,22 @@
-part of preprocessor;
+part of macro_processor.expression_evaluator;
 
-class _ExpressionEvaluator extends GeneralVisitor {
-  Map<String, List<SourceFragment>> _definitions;
+class ExpressionEvaluator extends GeneralVisitor {
+  Function _defined;
 
   String _source;
 
-  dynamic evaluate(Expression expression, String source, Map<String, List<SourceFragment>> definitions) {
-    if (expression == null) {
-      throw new ArgumentError.notNull("expression");
+  dynamic evaluate(String source, {bool defined(String name)}) {
+    if (source == null) {
+      throw new ArgumentError.notNull("source");
     }
 
-    _definitions = definitions;
-    _source = source;
+    if (defined == null) {
+      throw new ArgumentError.notNull("defined");
+    }
+
+    _defined = defined;
+    var parser = new ExpressionParser();
+    var expression = parser.parse(source);
     return expression.accept(this);
   }
 
@@ -78,12 +83,8 @@ class _ExpressionEvaluator extends GeneralVisitor {
         _checkComparableValue(rvalue, right.position);
         return lvalue < rvalue ? 1 : 0;
       case "==":
-        _checkComparableValue(lvalue, left.position);
-        _checkComparableValue(rvalue, right.position);
         return lvalue == rvalue ? 1 : 0;
       case "!=":
-        _checkComparableValue(lvalue, left.position);
-        _checkComparableValue(rvalue, right.position);
         return lvalue != rvalue ? 1 : 0;
       case "&&":
         _checkIntegerValue(lvalue, left.position);
@@ -112,7 +113,7 @@ class _ExpressionEvaluator extends GeneralVisitor {
 
   Object visitDefinedExpression(DefinedExpression node) {
     var name = node.identifier.name;
-    return _definitions.containsKey(name) ? 1 : 0;
+    return _defined(name) ? 1 : 0;
   }
 
   Object visitFloatingPointLiteral(FloatingPointLiteral node) {
@@ -121,20 +122,7 @@ class _ExpressionEvaluator extends GeneralVisitor {
 
   Object visitIdentifier(Identifier node) {
     var name = node.name;
-    var expander = new _MacroExpander();
-    var expanded = expander.expand(name, _definitions, null);
-    try {
-      var parser = new Parser();
-      var expression = parser.parseExpression(expanded);
-      if (expression is Identifier) {
-        return expression.name;
-      }
-
-      var evaluator = new _ExpressionEvaluator();
-      return evaluator.evaluate(expression, expanded, _definitions);
-    } catch (e) {
-      throw new FormatException("Expected valid expression", _source, node.position);
-    }
+    return new Symbol(name);
   }
 
   Object visitIntegerLiteral(IntegerLiteral node) {

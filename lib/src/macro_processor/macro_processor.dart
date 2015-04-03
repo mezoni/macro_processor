@@ -1,8 +1,8 @@
-part of preprocessor;
+part of macro_processor;
 
 class MacroProcessor {
   List<TextBlock> process(String filename, Map<String, String> files,
-      {Map<String, List<SourceFragment>> definitions, Map<String, dynamic> environment}) {
+      {Map<String, MacroDefinition> definitions, Map<String, dynamic> environment}) {
     var processor = new _MacroProcessor();
     return processor.process(filename, files, definitions: definitions, environment: environment);
   }
@@ -11,11 +11,9 @@ class MacroProcessor {
 class _MacroProcessor extends GeneralVisitor {
   List<TextBlock> _blocks;
 
-  Map<String, List<SourceFragment>> _definitions;
+  Map<String, MacroDefinition> _definitions;
 
   Map<String, dynamic> _environment;
-
-  bool _expand;
 
   String _filename;
 
@@ -24,7 +22,7 @@ class _MacroProcessor extends GeneralVisitor {
   String _source;
 
   List<TextBlock> process(String filename, Map<String, String> files,
-      {Map<String, List<SourceFragment>> definitions, Map<String, dynamic> environment}) {
+      {Map<String, MacroDefinition> definitions, Map<String, dynamic> environment}) {
     if (filename == null) {
       throw new ArgumentError.notNull("filename");
     }
@@ -38,12 +36,11 @@ class _MacroProcessor extends GeneralVisitor {
     }
 
     if (definitions == null) {
-      definitions = <String, List<SourceFragment>>{};
+      definitions = <String, MacroDefinition>{};
     }
 
     _definitions = definitions;
     _environment = environment;
-    _expand = true;
     _filename = filename;
     _files = files;
     _source = _files[_filename];
@@ -51,8 +48,8 @@ class _MacroProcessor extends GeneralVisitor {
       throw new StateError("File not found: $_filename");
     }
 
-    var parser = new Parser();
-    var file = parser.parsePreprocessingFile(_source);
+    var parser = new DirectiveParser();
+    var file = parser.parse(_source);
     if (environment != null) {
       for (var key in environment.keys) {
         var value = environment[key];
@@ -61,7 +58,9 @@ class _MacroProcessor extends GeneralVisitor {
         }
 
         // TODO: Parse source fragments
-        _definitions[key] = [new SourceFragment(position: 0, text: value)];
+        var fragments = new UnmodifiableListView([value]);
+        var definition = new MacroDefinition(fragments: fragments, name: key);
+        _definitions[key] = definition;
       }
     }
 
@@ -97,12 +96,19 @@ class _MacroProcessor extends GeneralVisitor {
 
   Object visitDefineDirective(DefineDirective node) {
     var key = node.identifier.name;
-    var fragments = node.replacement;
-    for (var fragment in fragments) {
-      fragment.filename = _filename;
+    var fragments = [];
+    for (var fragment in node.fragments) {
+      var value = fragment.value;
+      if (value is! Symbol) {
+        value = fragment.text;
+      }
+
+      fragments.add(value);
     }
 
-    _definitions[key] = fragments;
+    fragments = new UnmodifiableListView(fragments);
+    var definition = new MacroDefinition(filename: _filename, fragments: fragments, name: key);
+    _definitions[key] = definition;
     return null;
   }
 
@@ -120,23 +126,18 @@ class _MacroProcessor extends GeneralVisitor {
     var success = false;
     switch (ifGroup.name) {
       case "#if":
-        var evaluator = new _ExpressionEvaluator();
         var condition = ifGroup.condition;
-        var result = evaluator.evaluate(condition, _source, _definitions);
-        if (result is! int) {
-          throw new FormatException("Expected integer extression: ${condition}", _source, condition.position);
-        }
-
+        var result = _evaluateIfCondition(ifGroup);
         success = result != 0;
         break;
       case "#ifdef":
-        Identifier identifier = ifGroup.condition;
-        var name = identifier.name;
+        var symbol = ifGroup.condition[0].value;
+        var name = _symbolToString(symbol);
         success = _definitions[name] != null;
         break;
       case "#ifndef":
-        Identifier identifier = ifGroup.condition;
-        var name = identifier.name;
+        var symbol = ifGroup.condition[0].value;
+        var name = _symbolToString(symbol);
         success = _definitions[name] == null;
         break;
       default:
@@ -148,13 +149,7 @@ class _MacroProcessor extends GeneralVisitor {
       _visitNodes(ifGroup.body);
     } else if (elifGroups != null) {
       for (var elifGroup in elifGroups) {
-        var evaluator = new _ExpressionEvaluator();
-        var condition = elifGroup.condition;
-        var result = evaluator.evaluate(condition, _source, _definitions);
-        if (result is! int) {
-          throw new FormatException("Expected integer extression: ${condition}", _source, condition.position);
-        }
-
+        var result = _evaluateIfCondition(elifGroup);
         success = result != 0;
         if (success) {
           _visitNodes(elifGroup.body);
@@ -192,20 +187,8 @@ class _MacroProcessor extends GeneralVisitor {
   Object visitSourceLine(SourceLine node) {
     var fragments = node.fragments;
     var buffer = new StringBuffer();
-    if (fragments != null) {
-      var expander = new _MacroExpander();
-      for (var fragment in fragments) {
-        var value = fragment.value;
-        var text = fragment.text;
-        if (value is Symbol && _expand) {
-          text = expander.expand(text, _definitions, "");
-        }
-
-        buffer.write(text);
-      }
-    }
-
-    var block = new TextBlock(buffer.toString(), node.position, filename: _filename);
+    var text = _expand(fragments);
+    var block = new TextBlock(text, node.position, filename: _filename);
     _blocks.add(block);
     return null;
   }
@@ -214,6 +197,93 @@ class _MacroProcessor extends GeneralVisitor {
     var key = node.identifier.name;
     _definitions.remove(key);
     return null;
+  }
+
+  int _evaluateIfCondition(IfDirective node) {
+    var condition = node.condition;
+    var text = _expand(condition);
+    var result;
+    try {
+      result = _evaluate(text);
+    } on FormatException catch (e) {
+      int position;
+      if (!condition.isEmpty) {
+        position = condition[0].position;
+      } else {
+        position = node.position + node.name.length + 1;
+      }
+
+      var messages = [];
+      messages.add(new ParserErrorMessage("Not a valid expression", position, position));
+      var strings = ParserErrorFormatter.format(_source, messages);
+      strings.add(e.message);
+      throw new FormatException(strings.join("\n"));
+    }
+
+    if (result is! int) {
+      int position;
+      if (!condition.isEmpty) {
+        position = condition[0].position;
+      } else {
+        position = node.position + node.name.length + 1;
+      }
+
+      var messages = [];
+      messages.add(new ParserErrorMessage("Expected an integer expression", position, position));
+      var strings = ParserErrorFormatter.format(_source, messages);
+      for (var fragment in condition) {
+        if (fragment.value is Symbol) {
+          strings.add("${node.name} $text");
+          break;
+        }
+      }
+
+      throw new FormatException(strings.join("\n"));
+    }
+
+    return result;
+  }
+
+  dynamic _evaluate(String text) {
+    bool defined(String name) {
+      return _definitions.containsKey(name);
+    }
+
+    var evaluator = new ExpressionEvaluator();
+    return evaluator.evaluate(text, defined: defined);
+  }
+
+  String _expand(List<SourceFragment> fragments, [String defaultValue = ""]) {
+    var buffer = new StringBuffer();
+    if (fragments != null) {
+      var expander = new MacroExpander();
+      var expand = true;
+      for (var fragment in fragments) {
+        var value = fragment.value;
+        var text = fragment.text;
+        if (value is Symbol) {
+          text = _symbolToString(value);
+          if (!expand) {
+            expand = true;
+          } else {
+            if (text == "defined") {
+              expand = false;
+            } else {
+              text = expander.expand(text, _definitions, defaultValue);
+            }
+          }
+        }
+
+        buffer.write(text);
+      }
+    }
+
+    return buffer.toString();
+  }
+
+  String _symbolToString(Symbol symbol) {
+    var string = symbol.toString();
+    return string.substring(8, string.length - 2);
   }
 
   void _visitNodes(List<AstNode> nodes) {

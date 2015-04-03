@@ -1,4 +1,4 @@
-part of preprocessor.internal.ast;
+part of macro_processor.internal.ast;
 
 abstract class AstNode {
   final int position;
@@ -145,9 +145,9 @@ class DefinedExpression extends Expression {
 class DefineDirective extends Directive {
   final Identifier identifier;
 
-  final List<SourceFragment> replacement;
+  final List<SourceFragment> fragments;
 
-  DefineDirective({this.identifier, int position, this.replacement}) : super(position: position);
+  DefineDirective({this.fragments, this.identifier, int position}) : super(position: position);
 
   String get name => "#define";
 
@@ -159,7 +159,7 @@ class DefineDirective extends Directive {
 
   void visitChildren(Visitor visitor) {
     identifier.accept(visitor);
-    for (var token in replacement) {
+    for (var token in fragments) {
       token.accept(visitor);
     }
   }
@@ -252,7 +252,7 @@ class Identifier extends Expression {
 }
 
 class IfDirective extends GroupDirective {
-  final Expression condition;
+  final List<SourceFragment> condition;
 
   final String name;
 
@@ -265,7 +265,10 @@ class IfDirective extends GroupDirective {
   }
 
   void visitChildren(Visitor visitor) {
-    condition.accept(visitor);
+    for (var fragment in condition) {
+      fragment.accept(visitor);
+    }
+
     if (body != null) {
       for (var node in body) {
         node.accept(visitor);
@@ -378,8 +381,6 @@ class PreprocessingFile extends AstNode {
 }
 
 class SourceFragment extends AstNode {
-  String filename;
-
   final String text;
 
   final dynamic value;
@@ -390,6 +391,22 @@ class SourceFragment extends AstNode {
 
   dynamic accept(Visitor visitor) {
     return visitor.visitSourceFragment(this);
+  }
+}
+
+class SourceFragments extends AstNode {
+  final List<SourceFragments> fragments;
+
+  final String text;
+
+  SourceFragments({this.fragments, int position, this.text}) : super(position: position);
+
+  @override
+  AstNodeTypes get type => null;
+
+  // TODO: implement type
+  accept(Visitor visitor) {
+    // TODO: implement accept
   }
 }
 
