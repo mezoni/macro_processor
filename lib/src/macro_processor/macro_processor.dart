@@ -31,6 +31,15 @@ class _MacroProcessor extends GeneralVisitor {
       throw new ArgumentError.notNull("files");
     }
 
+    if (!files.containsKey(filename)) {
+      throw new StateError("File not found: $filename");
+    }
+
+    _source = files[filename];
+    if (_source == null) {
+      throw new StateError("File is corrupted: $filename");
+    }
+
     if (environment == null) {
       environment = <String, dynamic>{};
     }
@@ -43,11 +52,6 @@ class _MacroProcessor extends GeneralVisitor {
     _environment = environment;
     _filename = filename;
     _files = files;
-    _source = _files[_filename];
-    if (_source == null) {
-      throw new StateError("File not found: $_filename");
-    }
-
     var parser = new DirectiveParser();
     var file = parser.parse(_source);
     if (environment != null) {
@@ -113,12 +117,17 @@ class _MacroProcessor extends GeneralVisitor {
   }
 
   Object visitErrorDirective(ErrorDirective node) {
-    try {
-      throw new FormatException(node.message, _source, node.position);
-    } on FormatException catch (e) {
-      var message = e.toString().replaceFirst("FormatException: ", "");
-      throw new StateError(message);
-    }
+    _formatError("Compilation error", "Error message", node.message, node.position);
+    return null;
+  }
+
+  void _formatError(String title, String subject, String message, int position) {
+    var messages = [];
+    messages.add(new ParserErrorMessage(message, position, position));
+    var strings = ParserErrorFormatter.format(_source, messages, title: title);
+    strings.insert(0, "\n$subject in file '$_filename'");
+    message = strings.join("\n");
+    throw new FormatException(message);
   }
 
   Object visitIfSection(IfSection node) {
@@ -141,7 +150,7 @@ class _MacroProcessor extends GeneralVisitor {
         success = _definitions[name] == null;
         break;
       default:
-        throw new FormatException("Unknown directive: ${ifGroup.name}", _source, ifGroup.position);
+        _formatError("Format exception", "Unknown directive", "Unknown directive: ${ifGroup.name}", ifGroup.position);
     }
 
     var elifGroups = node.elifGroups;
@@ -175,7 +184,8 @@ class _MacroProcessor extends GeneralVisitor {
   }
 
   Object visitNode(AstNode node) {
-    throw new FormatException("Syntax error", _source, node.position);
+    _formatError("Format exception", "Syntax error", "Syntax error", node.position);
+    return null;
   }
 
   Object visitPreprocessingFile(PreprocessingFile node) {
@@ -186,7 +196,6 @@ class _MacroProcessor extends GeneralVisitor {
 
   Object visitSourceLine(SourceLine node) {
     var fragments = node.fragments;
-    var buffer = new StringBuffer();
     var text = _expand(fragments);
     var block = new TextBlock(text, node.position, filename: _filename);
     _blocks.add(block);
@@ -213,11 +222,8 @@ class _MacroProcessor extends GeneralVisitor {
         position = node.position + node.name.length + 1;
       }
 
-      var messages = [];
-      messages.add(new ParserErrorMessage("Not a valid expression", position, position));
-      var strings = ParserErrorFormatter.format(_source, messages);
-      strings.add(e.message);
-      throw new FormatException(strings.join("\n"));
+      _formatError("Format exception", "Invalid expression", "Invalid expression", position);
+      return null;
     }
 
     if (result is! int) {
@@ -228,17 +234,8 @@ class _MacroProcessor extends GeneralVisitor {
         position = node.position + node.name.length + 1;
       }
 
-      var messages = [];
-      messages.add(new ParserErrorMessage("Expected an integer expression", position, position));
-      var strings = ParserErrorFormatter.format(_source, messages);
-      for (var fragment in condition) {
-        if (fragment.value is Symbol) {
-          strings.add("${node.name} $text");
-          break;
-        }
-      }
 
-      throw new FormatException(strings.join("\n"));
+      _formatError("Format exception", "Expected integer expression", "Expected integer expression", position);
     }
 
     return result;
