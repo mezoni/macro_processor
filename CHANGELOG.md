@@ -1,3 +1,8 @@
+## 0.0.10
+
+- Fixed bug in `expr.peg` grammar
+- Fixed bug in `macro.peg` grammar
+
 ## 0.0.7
 
 - Breaking changes. Changed method signature `MacroProcessor.process()`

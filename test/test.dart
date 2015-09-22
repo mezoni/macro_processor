@@ -181,7 +181,7 @@ ABC
 #endif
 a''';
 
-String text2 = '''
+String text2 = r'''
 #define _HELLO_ _HI_
 #define _HI_ Hello
 #if OS == windows
@@ -193,4 +193,5 @@ Bye windows!
 _HELLO_ OS
 #endif
 #define E YEE!
+#define ESC C:\\
 1E2 E''';

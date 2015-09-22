@@ -44,6 +44,8 @@ int _escape(String ch) {
       return 0x22;
     case "\?":
       return 0x3f;
+    case "\\":
+      return 0x5c;
     default:
       throw new StateError("Unknown escape sequence: \\$ch");  
   }
