@@ -207,85 +207,58 @@ class ExprParser {
   
   static final List<bool> _lookahead = _unmap([0x1ffb4c1, 0x17fffffe, 0xffffffd, 0x2803, 0x0, 0x0, 0x701ffa0e, 0x697fffff, 0x7fffffff, 0x7e87ffff, 0x7fdfffff, 0x3f01, 0x100fe00, 0x6010000, 0x8000002, 0xc, 0x1ffa0600, 0x30000, 0xc0000, 0x8430000]);
   
-  // '\n', '\r'
   static final List<bool> _mapping0 = _unmap([0x9]);
   
-  // '\n', '\r', '\'', '\\'
   static final List<bool> _mapping1 = _unmap([0x20000009, 0x0, 0x100000]);
   
-  // 'F', 'L', 'f', 'l'
   static final List<bool> _mapping2 = _unmap([0x41, 0x82]);
   
-  // '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'a', 'b', 'c', 'd', 'e', 'f'
   static final List<bool> _mapping3 = _unmap([0x7e03ff, 0xfc0000]);
   
-  // 'L', 'l'
   static final List<bool> _mapping4 = _unmap([0x1, 0x2]);
   
-  // 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
   static final List<bool> _mapping5 = _unmap([0x43ffffff, 0x7fffffe]);
   
-  // '+', '-'
   static final List<bool> _mapping6 = _unmap([0x5]);
   
-  // '\"', '\'', '?', '\\', 'a', 'b', 'f', 'n', 'r', 't', 'v'
   static final List<bool> _mapping7 = _unmap([0x20000021, 0x8000000, 0x544046]);
   
-  // '\t', ' '
   static final List<bool> _mapping8 = _unmap([0x800001]);
   
-  // 'U', 'u'
   static final List<bool> _mapping9 = _unmap([0x1, 0x2]);
   
-  // 'defined'
   static final List<int> _strings0 = <int>[100, 101, 102, 105, 110, 101, 100];
   
-  // '&&'
   static final List<int> _strings1 = <int>[38, 38];
   
-  // 'LL'
   static final List<int> _strings10 = <int>[76, 76];
   
-  // 'll'
   static final List<int> _strings11 = <int>[108, 108];
   
-  // '<<'
   static final List<int> _strings12 = <int>[60, 60];
   
-  // '<='
   static final List<int> _strings13 = <int>[60, 61];
   
-  // '!='
   static final List<int> _strings14 = <int>[33, 61];
   
-  // '\U'
   static final List<int> _strings15 = <int>[92, 85];
   
-  // '\u'
   static final List<int> _strings16 = <int>[92, 117];
   
-  // '\r\n'
   static final List<int> _strings2 = <int>[13, 10];
   
-  // '||'
   static final List<int> _strings3 = <int>[124, 124];
   
-  // 'L''
   static final List<int> _strings4 = <int>[76, 39];
   
-  // '=='
   static final List<int> _strings5 = <int>[61, 61];
   
-  // '>='
   static final List<int> _strings6 = <int>[62, 61];
   
-  // '\x'
   static final List<int> _strings7 = <int>[92, 120];
   
-  // '0x'
   static final List<int> _strings8 = <int>[48, 120];
   
-  // '0X'
   static final List<int> _strings9 = <int>[48, 88];
   
   final List<String> _tokenAliases = ["\'defined\'", "additive_operator", "\'&\'", "\'&&\'", "constant", "eof", "equality_operator", "identifier", "\'(\'", "multiplicative_operator", "new_line", "\'?\'", "relational_operator", "\')\'", "\':\'", "\'<<\'", "unary_operator", "\'|\'", "\'||\'", "\'^\'"];
@@ -688,34 +661,24 @@ class ExprParser {
   }
   
   dynamic _parse_DEFINED() {
-    // LEXEME (TOKEN)
-    // DEFINED <- 'defined' spaces
     var $$;
     _token = 0;  
     _tokenStart = _cursor;  
-    // => 'defined' spaces # Choice
     switch (_ch == 100 ? 0 : _ch == -1 ? 2 : 1) {
-      // [d]
       case 0:
-        // => 'defined' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => 'defined'
           $$ = _matchString(_strings0, 'defined');
-          // <= 'defined'
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // 'defined'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -727,29 +690,21 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= 'defined' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined'
       _failure(_expect12);
     }
-    // <= 'defined' spaces # Choice
     _token = null;
     _tokenStart = null;
     return $$;
   }
   
   dynamic _parse_additive_expression() {
-    // SENTENCE (NONTERMINAL)
-    // additive_expression <- multiplicative_expression (additive_operator multiplicative_expression)*
     var $$;          
     var pos = _cursor;             
     if(_cachePos[10] >= pos) {
@@ -760,39 +715,28 @@ class ExprParser {
     } else {
       _cachePos[10] = pos;
     }  
-    // => multiplicative_expression (additive_operator multiplicative_expression)* # Choice
     switch (_getState(_transitions0)) {
-      // [!] [\'-(] [+] [--.] [0-9] [A-Z] [\\] [_] [a-z] [~]
       case 0:
-        // => multiplicative_expression (additive_operator multiplicative_expression)* # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => multiplicative_expression
           $$ = _parse_multiplicative_expression();
-          // <= multiplicative_expression
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => (additive_operator multiplicative_expression)*
           var testing0 = _testing; 
           for (var reps = []; ; ) {
             _testing = _cursor;
-            // => (additive_operator multiplicative_expression) # Choice
             switch (_getState(_transitions3)) {
-              // [+] [-]
               case 0:
-                // => additive_operator multiplicative_expression # Sequence
+              case 2:
                 var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
                 _startPos = _cursor;
                 while (true) {  
-                  // => additive_operator
                   $$ = _parse_additive_operator();
-                  // <= additive_operator
                   if (!success) break;
                   var seq = new List(2)..[0] = $$;
-                  // => multiplicative_expression
                   $$ = _parse_multiplicative_expression();
-                  // <= multiplicative_expression
                   if (!success) break;
                   seq[1] = $$;
                   $$ = seq;
@@ -803,21 +747,15 @@ class ExprParser {
                   _cursor = pos1;
                 }
                 _startPos = startPos1;
-                // <= additive_operator multiplicative_expression # Sequence
                 break;
-              // No matches
-              // EOF
               case 1:
-              case 2:
                 $$ = null;
                 success = false;
                 break;
             }
             if (!success && _cursor > _testing) {
-              // Expected: additive_operator
               _failure(_expect9);
             }
-            // <= (additive_operator multiplicative_expression) # Choice
             if (success) {  
               reps.add($$);
             } else {
@@ -827,14 +765,11 @@ class ExprParser {
               break; 
             }
           }
-          // <= (additive_operator multiplicative_expression)*
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // multiplicative_expression
             final $1 = seq[0];
-            // (additive_operator multiplicative_expression)*
             final $2 = seq[1];
             final $start = startPos0;
             $$ = _buildBinary($1, $2);
@@ -846,21 +781,15 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= multiplicative_expression (additive_operator multiplicative_expression)* # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined', identifier, constant, '(', unary_operator
       _failure(_expect0);
     }
-    // <= multiplicative_expression (additive_operator multiplicative_expression)* # Choice
     if (_cacheable[10]) {
       _addToCache($$, pos, 10);
     }    
@@ -868,84 +797,68 @@ class ExprParser {
   }
   
   dynamic _parse_additive_operator() {
-    // LEXEME (TOKEN)
-    // additive_operator <- plus / minus
     var $$;
     _token = 1;  
     _tokenStart = _cursor;  
-    // => plus / minus # Choice
     switch (_getState(_transitions8)) {
-      // [+]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => plus
         $$ = _parse_plus();
-        // <= plus
         _startPos = startPos0;
         break;
-      // [-]
       case 1:
         var startPos1 = _startPos;
         _startPos = _cursor;
-        // => minus
         $$ = _parse_minus();
-        // <= minus
         _startPos = startPos1;
         break;
-      // No matches
-      // EOF
       case 2:
-      case 3:
         $$ = null;
         success = false;
         break;
+      case 3:
+        while (true) {
+          var startPos2 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_plus();
+          _startPos = startPos2;
+          if (success) break;
+          var startPos3 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_minus();
+          _startPos = startPos3;
+          break;
+        }
+        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: additive_operator
       _failure(_expect9);
     }
-    // <= plus / minus # Choice
     _token = null;
     _tokenStart = null;
     return $$;
   }
   
   dynamic _parse_ampersand() {
-    // LEXEME (TOKEN)
-    // ampersand <- '&' spaces
     var $$;
     _token = 2;  
     _tokenStart = _cursor;  
-    // => '&' spaces # Choice
     switch (_ch == 38 ? 0 : _ch == -1 ? 2 : 1) {
-      // [&]
       case 0:
-        // => '&' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '&'
-          $$ = '&';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= '&'
+          $$ = _matchChar(38, '&');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '&'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -957,55 +870,39 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '&' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: '&'
       _failure(_expect5);
     }
-    // <= '&' spaces # Choice
     _token = null;
     _tokenStart = null;
     return $$;
   }
   
   dynamic _parse_ampersand2() {
-    // LEXEME (TOKEN)
-    // ampersand2 <- '&&' spaces
     var $$;
     _token = 3;  
     _tokenStart = _cursor;  
-    // => '&&' spaces # Choice
     switch (_ch == 38 ? 0 : _ch == -1 ? 2 : 1) {
-      // [&]
       case 0:
-        // => '&&' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '&&'
           $$ = _matchString(_strings1, '&&');
-          // <= '&&'
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '&&'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -1017,29 +914,21 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '&&' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: '&&'
       _failure(_expect2);
     }
-    // <= '&&' spaces # Choice
     _token = null;
     _tokenStart = null;
     return $$;
   }
   
   dynamic _parse_and_expression() {
-    // SENTENCE (NONTERMINAL)
-    // and_expression <- equality_expression (ampersand equality_expression)*
     var $$;          
     var pos = _cursor;             
     if(_cachePos[6] >= pos) {
@@ -1050,39 +939,28 @@ class ExprParser {
     } else {
       _cachePos[6] = pos;
     }  
-    // => equality_expression (ampersand equality_expression)* # Choice
     switch (_getState(_transitions0)) {
-      // [!] [\'-(] [+] [--.] [0-9] [A-Z] [\\] [_] [a-z] [~]
       case 0:
-        // => equality_expression (ampersand equality_expression)* # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => equality_expression
           $$ = _parse_equality_expression();
-          // <= equality_expression
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => (ampersand equality_expression)*
           var testing0 = _testing; 
           for (var reps = []; ; ) {
             _testing = _cursor;
-            // => (ampersand equality_expression) # Choice
             switch (_ch == 38 ? 0 : _ch == -1 ? 2 : 1) {
-              // [&]
               case 0:
-                // => ampersand equality_expression # Sequence
+              case 2:
                 var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
                 _startPos = _cursor;
                 while (true) {  
-                  // => ampersand
                   $$ = _parse_ampersand();
-                  // <= ampersand
                   if (!success) break;
                   var seq = new List(2)..[0] = $$;
-                  // => equality_expression
                   $$ = _parse_equality_expression();
-                  // <= equality_expression
                   if (!success) break;
                   seq[1] = $$;
                   $$ = seq;
@@ -1093,21 +971,15 @@ class ExprParser {
                   _cursor = pos1;
                 }
                 _startPos = startPos1;
-                // <= ampersand equality_expression # Sequence
                 break;
-              // No matches
-              // EOF
               case 1:
-              case 2:
                 $$ = null;
                 success = false;
                 break;
             }
             if (!success && _cursor > _testing) {
-              // Expected: '&'
               _failure(_expect5);
             }
-            // <= (ampersand equality_expression) # Choice
             if (success) {  
               reps.add($$);
             } else {
@@ -1117,14 +989,11 @@ class ExprParser {
               break; 
             }
           }
-          // <= (ampersand equality_expression)*
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // equality_expression
             final $1 = seq[0];
-            // (ampersand equality_expression)*
             final $2 = seq[1];
             final $start = startPos0;
             $$ = _buildBinary($1, $2);
@@ -1136,21 +1005,15 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= equality_expression (ampersand equality_expression)* # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined', identifier, constant, '(', unary_operator
       _failure(_expect0);
     }
-    // <= equality_expression (ampersand equality_expression)* # Choice
     if (_cacheable[6]) {
       _addToCache($$, pos, 6);
     }    
@@ -1158,38 +1021,22 @@ class ExprParser {
   }
   
   dynamic _parse_asterisk() {
-    // MORHEME
-    // asterisk <- '*' spaces
     var $$;
-    // => '*' spaces # Choice
     switch (_ch == 42 ? 0 : _ch == -1 ? 2 : 1) {
-      // [*]
       case 0:
-        // => '*' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '*'
-          $$ = '*';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= '*'
+          $$ = _matchChar(42, '*');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '*'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -1201,64 +1048,39 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '*' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: *
       _failure(_expect23);
     }
-    // <= '*' spaces # Choice
     return $$;
   }
   
   dynamic _parse_binary_exponent_part() {
-    // MORHEME
-    // binary_exponent_part <- ('p' / 'P') (sign / '') digit_sequence
     var $$;
-    // => ('p' / 'P') (sign / '') digit_sequence # Choice
     switch (_getState(_transitions16)) {
-      // [P] [p]
       case 0:
-        // => ('p' / 'P') (sign / '') digit_sequence # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => ('p' / 'P') # Choice
           switch (_getState(_transitions17)) {
-            // [P]
             case 0:
               var startPos1 = _startPos;
               _startPos = _cursor;
-              // => 'P'
               $$ = _matchChar(80, 'P');
-              // <= 'P'
               _startPos = startPos1;
               break;
-            // [p]
             case 1:
               var startPos2 = _startPos;
               _startPos = _cursor;
-              // => 'p'
-              $$ = 'p';
-              success = true;
-              if (++_cursor < _inputLen) {
-                _ch = _input[_cursor];
-              } else {
-                _ch = -1;
-              }
-              // <= 'p'
+              $$ = _matchChar(112, 'p');
               _startPos = startPos2;
               break;
-            // No matches
-            // EOF
             case 2:
             case 3:
               $$ = null;
@@ -1266,71 +1088,51 @@ class ExprParser {
               break;
           }
           if (!success && _cursor > _testing) {
-            // Expected: p, P
             _failure(_expect24);
           }
-          // <= ('p' / 'P') # Choice
           if (!success) break;
           var seq = new List(3)..[0] = $$;
-          // => (sign / '') # Choice
           switch (_getState(_transitions18)) {
-            // [\u0000-*] [,] [.-\u0010ffff]
-            // EOF
             case 0:
             case 3:
               var startPos3 = _startPos;
               _startPos = _cursor;
-              // => ''
               success = true;
               $$ = '';
-              // <= ''
               _startPos = startPos3;
               break;
-            // [+] [-]
             case 1:
               while (true) {
                 var startPos4 = _startPos;
                 _startPos = _cursor;
-                // => sign
                 $$ = _parse_sign();
-                // <= sign
                 _startPos = startPos4;
                 if (success) break;
                 var startPos5 = _startPos;
                 _startPos = _cursor;
-                // => ''
                 success = true;
                 $$ = '';
-                // <= ''
                 _startPos = startPos5;
                 break;
               }
               break;
-            // No matches
             case 2:
               $$ = null;
               success = false;
               break;
           }
           if (!success && _cursor > _testing) {
-            // Expected: 
             _failure(const [null]);
           }
-          // <= (sign / '') # Choice
           if (!success) break;
           seq[1] = $$;
-          // => digit_sequence
           $$ = _parse_digit_sequence();
-          // <= digit_sequence
           if (!success) break;
           seq[2] = $$;
           $$ = seq;
           if (success) {    
-            // ('p' / 'P')
             final $1 = seq[0];
-            // (sign / '')
             final $2 = seq[1];
-            // digit_sequence
             final $3 = seq[2];
             final $start = startPos0;
             $$ = _text();
@@ -1342,61 +1144,43 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= ('p' / 'P') (sign / '') digit_sequence # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: p, P
       _failure(_expect24);
     }
-    // <= ('p' / 'P') (sign / '') digit_sequence # Choice
     return $$;
   }
   
   dynamic _parse_c_char() {
-    // MORHEME
-    // c_char <- ![\n\r'\\] . / escape_sequence
     var $$;
-    // => ![\n\r'\\] . / escape_sequence # Choice
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
       case 0:
+      case 2:
         while (true) {
-          // => ![\n\r'\\] . # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => ![\n\r'\\]
             var ch1 = _ch, pos1 = _cursor, testing0 = _testing; 
             _testing = _inputLen + 1;
-            // => [\n\r'\\]
             $$ = _matchMapping(10, 92, _mapping1);
-            // <= [\n\r'\\]
             _ch = ch1;
             _cursor = pos1; 
             _testing = testing0;
             $$ = null;
             success = !success;
-            // <= ![\n\r'\\]
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => .
             $$ = _matchAny();
-            // <= .
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // ![\n\r'\\]
               final $1 = seq[0];
-              // .
               final $2 = seq[1];
               final $start = startPos0;
               $$ = $2.codeUnitAt(0);
@@ -1408,114 +1192,45 @@ class ExprParser {
             _cursor = pos0;
           }
           _startPos = startPos0;
-          // <= ![\n\r'\\] . # Sequence
           if (success) break;
           var startPos1 = _startPos;
           _startPos = _cursor;
-          // => escape_sequence
           $$ = _parse_escape_sequence();
-          // <= escape_sequence
           _startPos = startPos1;
           break;
         }
         break;
-      // No matches
       case 1:
         $$ = null;
         success = false;
         break;
-      // EOF
-      case 2:
-        // => ![\n\r'\\] . # Sequence
-        var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => ![\n\r'\\]
-          var ch3 = _ch, pos3 = _cursor, testing1 = _testing; 
-          _testing = _inputLen + 1;
-          // => [\n\r'\\]
-          $$ = _matchMapping(10, 92, _mapping1);
-          // <= [\n\r'\\]
-          _ch = ch3;
-          _cursor = pos3; 
-          _testing = testing1;
-          $$ = null;
-          success = !success;
-          // <= ![\n\r'\\]
-          if (!success) break;
-          var seq = new List(2)..[0] = $$;
-          // => .
-          $$ = _matchAny();
-          // <= .
-          if (!success) break;
-          seq[1] = $$;
-          $$ = seq;
-          if (success) {    
-            // ![\n\r'\\]
-            final $1 = seq[0];
-            // .
-            final $2 = seq[1];
-            final $start = startPos2;
-            $$ = $2.codeUnitAt(0);
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch2;
-          _cursor = pos2;
-        }
-        _startPos = startPos2;
-        // <= ![\n\r'\\] . # Sequence
-        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= ![\n\r'\\] . / escape_sequence # Choice
     return $$;
   }
   
   dynamic _parse_character_constant_base() {
-    // MORHEME
-    // character_constant_base <- '\'' c_char '\'' / 'L\'' c_char '\''
     var $$;
-    // => '\'' c_char '\'' / 'L\'' c_char '\'' # Choice
     switch (_getState(_transitions19)) {
-      // [\']
       case 0:
-        // => '\'' c_char '\'' # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '\''
-          $$ = '\'';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= '\''
+          $$ = _matchChar(39, '\'');
           if (!success) break;
           var seq = new List(3)..[0] = $$;
-          // => c_char
           $$ = _parse_c_char();
-          // <= c_char
           if (!success) break;
           seq[1] = $$;
-          // => '\''
           $$ = _matchChar(39, '\'');
-          // <= '\''
           if (!success) break;
           seq[2] = $$;
           $$ = seq;
           if (success) {    
-            // '\''
             final $1 = seq[0];
-            // c_char
             final $2 = seq[1];
-            // '\''
             final $3 = seq[2];
             final $start = startPos0;
             $$ = new CharacterLiteral(position: $start, text: _text(), value: $2);
@@ -1527,36 +1242,24 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '\'' c_char '\'' # Sequence
         break;
-      // [L]
       case 1:
-        // => 'L\'' c_char '\'' # Sequence
         var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => 'L\''
           $$ = _matchString(_strings4, 'L\'');
-          // <= 'L\''
           if (!success) break;
           var seq = new List(3)..[0] = $$;
-          // => c_char
           $$ = _parse_c_char();
-          // <= c_char
           if (!success) break;
           seq[1] = $$;
-          // => '\''
           $$ = _matchChar(39, '\'');
-          // <= '\''
           if (!success) break;
           seq[2] = $$;
           $$ = seq;
           if (success) {    
-            // 'L\''
             final $1 = seq[0];
-            // c_char
             final $2 = seq[1];
-            // '\''
             final $3 = seq[2];
             final $start = startPos1;
             $$ = new CharacterLiteral(position: $start, text: _text(), value: $2);
@@ -1568,27 +1271,79 @@ class ExprParser {
           _cursor = pos1;
         }
         _startPos = startPos1;
-        // <= 'L\'' c_char '\'' # Sequence
         break;
-      // No matches
-      // EOF
       case 2:
-      case 3:
         $$ = null;
         success = false;
         break;
+      case 3:
+        while (true) {
+          var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            $$ = _matchChar(39, '\'');
+            if (!success) break;
+            var seq = new List(3)..[0] = $$;
+            $$ = _parse_c_char();
+            if (!success) break;
+            seq[1] = $$;
+            $$ = _matchChar(39, '\'');
+            if (!success) break;
+            seq[2] = $$;
+            $$ = seq;
+            if (success) {    
+              final $1 = seq[0];
+              final $2 = seq[1];
+              final $3 = seq[2];
+              final $start = startPos2;
+              $$ = new CharacterLiteral(position: $start, text: _text(), value: $2);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch2;
+            _cursor = pos2;
+          }
+          _startPos = startPos2;
+          if (success) break;
+          var ch3 = _ch, pos3 = _cursor, startPos3 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            $$ = _matchString(_strings4, 'L\'');
+            if (!success) break;
+            var seq = new List(3)..[0] = $$;
+            $$ = _parse_c_char();
+            if (!success) break;
+            seq[1] = $$;
+            $$ = _matchChar(39, '\'');
+            if (!success) break;
+            seq[2] = $$;
+            $$ = seq;
+            if (success) {    
+              final $1 = seq[0];
+              final $2 = seq[1];
+              final $3 = seq[2];
+              final $start = startPos3;
+              $$ = new CharacterLiteral(position: $start, text: _text(), value: $2);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch3;
+            _cursor = pos3;
+          }
+          _startPos = startPos3;
+          break;
+        }
+        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: ', L'
       _failure(_expect25);
     }
-    // <= '\'' c_char '\'' / 'L\'' c_char '\'' # Choice
     return $$;
   }
   
   dynamic _parse_conditional_expression() {
-    // SENTENCE (NONTERMINAL)
-    // conditional_expression <- logical_or_expression question_mark expression semicolon conditional_expression / logical_or_expression
     var $$;          
     var pos = _cursor;             
     if(_cachePos[1] >= pos) {
@@ -1599,51 +1354,34 @@ class ExprParser {
     } else {
       _cachePos[1] = pos;
     }  
-    // => logical_or_expression question_mark expression semicolon conditional_expression / logical_or_expression # Choice
     switch (_getState(_transitions0)) {
-      // [!] [\'-(] [+] [--.] [0-9] [A-Z] [\\] [_] [a-z] [~]
       case 0:
+      case 2:
         while (true) {
-          // => logical_or_expression question_mark expression semicolon conditional_expression # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => logical_or_expression
             $$ = _parse_logical_or_expression();
-            // <= logical_or_expression
             if (!success) break;
             var seq = new List(5)..[0] = $$;
-            // => question_mark
             $$ = _parse_question_mark();
-            // <= question_mark
             if (!success) break;
             seq[1] = $$;
-            // => expression
             $$ = _parse_expression();
-            // <= expression
             if (!success) break;
             seq[2] = $$;
-            // => semicolon
             $$ = _parse_semicolon();
-            // <= semicolon
             if (!success) break;
             seq[3] = $$;
-            // => conditional_expression
             $$ = _parse_conditional_expression();
-            // <= conditional_expression
             if (!success) break;
             seq[4] = $$;
             $$ = seq;
             if (success) {    
-              // logical_or_expression
               final $1 = seq[0];
-              // question_mark
               final $2 = seq[1];
-              // expression
               final $3 = seq[2];
-              // semicolon
               final $4 = seq[3];
-              // conditional_expression
               final $5 = seq[4];
               final $start = startPos0;
               $$ = _conditional($1, $3, $5, $start);
@@ -1655,30 +1393,22 @@ class ExprParser {
             _cursor = pos0;
           }
           _startPos = startPos0;
-          // <= logical_or_expression question_mark expression semicolon conditional_expression # Sequence
           if (success) break;
           var startPos1 = _startPos;
           _startPos = _cursor;
-          // => logical_or_expression
           $$ = _parse_logical_or_expression();
-          // <= logical_or_expression
           _startPos = startPos1;
           break;
         }
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined', identifier, constant, '(', unary_operator
       _failure(_expect0);
     }
-    // <= logical_or_expression question_mark expression semicolon conditional_expression / logical_or_expression # Choice
     if (_cacheable[1]) {
       _addToCache($$, pos, 1);
     }    
@@ -1686,34 +1416,24 @@ class ExprParser {
   }
   
   dynamic _parse_constant() {
-    // LEXEME (TOKEN)
-    // constant <- constant_base spaces2
     var $$;
     _token = 4;  
     _tokenStart = _cursor;  
-    // => constant_base spaces2 # Choice
     switch (_getState(_transitions9)) {
-      // [\'] [.] [0-9] [L]
       case 0:
-        // => constant_base spaces2 # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => constant_base
           $$ = _parse_constant_base();
-          // <= constant_base
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces2
           $$ = _parse_spaces2();
-          // <= spaces2
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // constant_base
             final $1 = seq[0];
-            // spaces2
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -1725,143 +1445,117 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= constant_base spaces2 # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: constant
       _failure(_expect14);
     }
-    // <= constant_base spaces2 # Choice
     _token = null;
     _tokenStart = null;
     return $$;
   }
   
   dynamic _parse_constant_base() {
-    // MORHEME
-    // constant_base <- floating_constant_base / integer_constant_base / character_constant_base
     var $$;
-    // => floating_constant_base / integer_constant_base / character_constant_base # Choice
     switch (_getState(_transitions20)) {
-      // [\'] [L]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => character_constant_base
         $$ = _parse_character_constant_base();
-        // <= character_constant_base
         _startPos = startPos0;
         break;
-      // [.]
       case 1:
         var startPos1 = _startPos;
         _startPos = _cursor;
-        // => floating_constant_base
         $$ = _parse_floating_constant_base();
-        // <= floating_constant_base
         _startPos = startPos1;
         break;
-      // [0-9]
       case 2:
         while (true) {
           var startPos2 = _startPos;
           _startPos = _cursor;
-          // => floating_constant_base
           $$ = _parse_floating_constant_base();
-          // <= floating_constant_base
           _startPos = startPos2;
           if (success) break;
           var startPos3 = _startPos;
           _startPos = _cursor;
-          // => integer_constant_base
           $$ = _parse_integer_constant_base();
-          // <= integer_constant_base
           _startPos = startPos3;
           break;
         }
         break;
-      // No matches
-      // EOF
       case 3:
-      case 4:
         $$ = null;
         success = false;
         break;
+      case 4:
+        while (true) {
+          var startPos4 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_floating_constant_base();
+          _startPos = startPos4;
+          if (success) break;
+          var startPos5 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_integer_constant_base();
+          _startPos = startPos5;
+          if (success) break;
+          var startPos6 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_character_constant_base();
+          _startPos = startPos6;
+          break;
+        }
+        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= floating_constant_base / integer_constant_base / character_constant_base # Choice
     return $$;
   }
   
   dynamic _parse_constant_expression() {
-    // SENTENCE (NONTERMINAL)
-    // constant_expression <- conditional_expression
     var $$;
-    // => conditional_expression # Choice
     switch (_getState(_transitions0)) {
-      // [!] [\'-(] [+] [--.] [0-9] [A-Z] [\\] [_] [a-z] [~]
       case 0:
+      case 2:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => conditional_expression
         $$ = _parse_conditional_expression();
-        // <= conditional_expression
         _startPos = startPos0;
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined', identifier, constant, '(', unary_operator
       _failure(_expect0);
     }
-    // <= conditional_expression # Choice
     return $$;
   }
   
   dynamic _parse_decimal_constant() {
-    // MORHEME
-    // decimal_constant <- nonzero_digit decimal_constant1
     var $$;
-    // => nonzero_digit decimal_constant1 # Choice
     switch (_ch >= 49 && _ch <= 57 ? 0 : _ch == -1 ? 2 : 1) {
-      // [1-9]
       case 0:
-        // => nonzero_digit decimal_constant1 # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => nonzero_digit
           $$ = _parse_nonzero_digit();
-          // <= nonzero_digit
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => decimal_constant1
           $$ = _parse_decimal_constant1();
-          // <= decimal_constant1
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // nonzero_digit
             final $1 = seq[0];
-            // decimal_constant1
             final $2 = seq[1];
             final $start = startPos0;
             $$ = int.parse(_text());
@@ -1873,57 +1567,38 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= nonzero_digit decimal_constant1 # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= nonzero_digit decimal_constant1 # Choice
     return $$;
   }
   
   dynamic _parse_decimal_constant1() {
-    // MORHEME
-    // decimal_constant1 <- digit decimal_constant1 / ''
     var $$;
-    // => digit decimal_constant1 / '' # Choice
     switch (_getState(_transitions21)) {
-      // [\u0000-/] [:-\u0010ffff]
-      // EOF
       case 0:
-      case 3:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => ''
         success = true;
         $$ = '';
-        // <= ''
         _startPos = startPos0;
         break;
-      // [0-9]
       case 1:
+      case 3:
         while (true) {
-          // => digit decimal_constant1 # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => digit
             $$ = _parse_digit();
-            // <= digit
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => decimal_constant1
             $$ = _parse_decimal_constant1();
-            // <= decimal_constant1
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
@@ -1934,59 +1609,43 @@ class ExprParser {
             _cursor = pos0;
           }
           _startPos = startPos1;
-          // <= digit decimal_constant1 # Sequence
           if (success) break;
           var startPos2 = _startPos;
           _startPos = _cursor;
-          // => ''
           success = true;
           $$ = '';
-          // <= ''
           _startPos = startPos2;
           break;
         }
         break;
-      // No matches
       case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= digit decimal_constant1 / '' # Choice
     return $$;
   }
   
   dynamic _parse_decimal_floating_constant() {
-    // MORHEME
-    // decimal_floating_constant <- decimal_floating_constant_base spaces2
     var $$;
-    // => decimal_floating_constant_base spaces2 # Choice
     switch (_getState(_transitions22)) {
-      // [.] [0-9]
       case 0:
-        // => decimal_floating_constant_base spaces2 # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => decimal_floating_constant_base
           $$ = _parse_decimal_floating_constant_base();
-          // <= decimal_floating_constant_base
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces2
           $$ = _parse_spaces2();
-          // <= spaces2
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // decimal_floating_constant_base
             final $1 = seq[0];
-            // spaces2
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -1998,70 +1657,46 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= decimal_floating_constant_base spaces2 # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= decimal_floating_constant_base spaces2 # Choice
     return $$;
   }
   
   dynamic _parse_decimal_floating_constant_base() {
-    // MORHEME
-    // decimal_floating_constant_base <- fractional_constant exponent_part? floating_suffix? / digit_sequence exponent_part floating_suffix?
     var $$;
-    // => fractional_constant exponent_part? floating_suffix? / digit_sequence exponent_part floating_suffix? # Choice
     switch (_getState(_transitions23)) {
-      // [.]
       case 0:
-        // => fractional_constant exponent_part? floating_suffix? # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => fractional_constant
           $$ = _parse_fractional_constant();
-          // <= fractional_constant
           if (!success) break;
           var seq = new List(3)..[0] = $$;
-          // => exponent_part?
           var testing0 = _testing;
           _testing = _cursor;
-          // => exponent_part
           $$ = _parse_exponent_part();
-          // <= exponent_part
           success = true; 
           _testing = testing0;
-          // <= exponent_part?
           if (!success) break;
           seq[1] = $$;
-          // => floating_suffix?
           var testing1 = _testing;
           _testing = _cursor;
-          // => floating_suffix
           $$ = _parse_floating_suffix();
-          // <= floating_suffix
           success = true; 
           _testing = testing1;
-          // <= floating_suffix?
           if (!success) break;
           seq[2] = $$;
           $$ = seq;
           if (success) {    
-            // fractional_constant
             final $1 = seq[0];
-            // exponent_part?
             final $2 = seq[1];
-            // floating_suffix?
             final $3 = seq[2];
             final $start = startPos0;
             $$ = _floatLiteral(_text(), $start);
@@ -2073,49 +1708,34 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= fractional_constant exponent_part? floating_suffix? # Sequence
         break;
-      // [0-9]
       case 1:
+      case 3:
         while (true) {
-          // => fractional_constant exponent_part? floating_suffix? # Sequence
           var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => fractional_constant
             $$ = _parse_fractional_constant();
-            // <= fractional_constant
             if (!success) break;
             var seq = new List(3)..[0] = $$;
-            // => exponent_part?
             var testing2 = _testing;
             _testing = _cursor;
-            // => exponent_part
             $$ = _parse_exponent_part();
-            // <= exponent_part
             success = true; 
             _testing = testing2;
-            // <= exponent_part?
             if (!success) break;
             seq[1] = $$;
-            // => floating_suffix?
             var testing3 = _testing;
             _testing = _cursor;
-            // => floating_suffix
             $$ = _parse_floating_suffix();
-            // <= floating_suffix
             success = true; 
             _testing = testing3;
-            // <= floating_suffix?
             if (!success) break;
             seq[2] = $$;
             $$ = seq;
             if (success) {    
-              // fractional_constant
               final $1 = seq[0];
-              // exponent_part?
               final $2 = seq[1];
-              // floating_suffix?
               final $3 = seq[2];
               final $start = startPos1;
               $$ = _floatLiteral(_text(), $start);
@@ -2127,40 +1747,27 @@ class ExprParser {
             _cursor = pos1;
           }
           _startPos = startPos1;
-          // <= fractional_constant exponent_part? floating_suffix? # Sequence
           if (success) break;
-          // => digit_sequence exponent_part floating_suffix? # Sequence
           var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => digit_sequence
             $$ = _parse_digit_sequence();
-            // <= digit_sequence
             if (!success) break;
             var seq = new List(3)..[0] = $$;
-            // => exponent_part
             $$ = _parse_exponent_part();
-            // <= exponent_part
             if (!success) break;
             seq[1] = $$;
-            // => floating_suffix?
             var testing4 = _testing;
             _testing = _cursor;
-            // => floating_suffix
             $$ = _parse_floating_suffix();
-            // <= floating_suffix
             success = true; 
             _testing = testing4;
-            // <= floating_suffix?
             if (!success) break;
             seq[2] = $$;
             $$ = seq;
             if (success) {    
-              // digit_sequence
               final $1 = seq[0];
-              // exponent_part
               final $2 = seq[1];
-              // floating_suffix?
               final $3 = seq[2];
               final $start = startPos2;
               $$ = _floatLiteral(_text(), $start);
@@ -2172,67 +1779,45 @@ class ExprParser {
             _cursor = pos2;
           }
           _startPos = startPos2;
-          // <= digit_sequence exponent_part floating_suffix? # Sequence
           break;
         }
         break;
-      // No matches
-      // EOF
       case 2:
-      case 3:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= fractional_constant exponent_part? floating_suffix? / digit_sequence exponent_part floating_suffix? # Choice
     return $$;
   }
   
   dynamic _parse_defined() {
-    // SENTENCE (NONTERMINAL)
-    // defined <- DEFINED lparen identifier rparen
     var $$;
-    // => DEFINED lparen identifier rparen # Choice
     switch (_ch == 100 ? 0 : _ch == -1 ? 2 : 1) {
-      // [d]
       case 0:
-        // => DEFINED lparen identifier rparen # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => DEFINED
           $$ = _parse_DEFINED();
-          // <= DEFINED
           if (!success) break;
           var seq = new List(4)..[0] = $$;
-          // => lparen
           $$ = _parse_lparen();
-          // <= lparen
           if (!success) break;
           seq[1] = $$;
-          // => identifier
           $$ = _parse_identifier();
-          // <= identifier
           if (!success) break;
           seq[2] = $$;
-          // => rparen
           $$ = _parse_rparen();
-          // <= rparen
           if (!success) break;
           seq[3] = $$;
           $$ = seq;
           if (success) {    
-            // DEFINED
             final $1 = seq[0];
-            // lparen
             final $2 = seq[1];
-            // identifier
             final $3 = seq[2];
-            // rparen
             final $4 = seq[3];
             final $start = startPos0;
             $$ = new DefinedExpression(identifier: $3, position: $start);
@@ -2244,41 +1829,27 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= DEFINED lparen identifier rparen # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined'
       _failure(_expect12);
     }
-    // <= DEFINED lparen identifier rparen # Choice
     return $$;
   }
   
   dynamic _parse_digit() {
-    // MORHEME
-    // digit <- [0-9]
     var $$;
-    // => [0-9] # Choice
     switch (_ch >= 48 && _ch <= 57 ? 0 : _ch == -1 ? 2 : 1) {
-      // [0-9]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => [0-9]
         $$ = _matchRange(48, 57);
-        // <= [0-9]
         _startPos = startPos0;
         break;
-      // No matches
-      // EOF
       case 1:
       case 2:
         $$ = null;
@@ -2286,29 +1857,20 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= [0-9] # Choice
     return $$;
   }
   
   dynamic _parse_digit_sequence() {
-    // MORHEME
-    // digit_sequence <- digit+
     var $$;
-    // => digit+ # Choice
     switch (_ch >= 48 && _ch <= 57 ? 0 : _ch == -1 ? 2 : 1) {
-      // [0-9]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => digit+
         var testing0;
         for (var first = true, reps; ;) {  
-          // => digit  
           $$ = _parse_digit();  
-          // <= digit  
           if (success) {
            if (first) {      
               first = false;
@@ -2327,17 +1889,13 @@ class ExprParser {
             break;
           }  
         }
-        // <= digit+
         if (success) {    
-          // digit+
           final $1 = $$;
           final $start = startPos0;
           $$ = _text();
         }
         _startPos = startPos0;
         break;
-      // No matches
-      // EOF
       case 1:
       case 2:
         $$ = null;
@@ -2345,84 +1903,60 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= digit+ # Choice
     return $$;
   }
   
   dynamic _parse_eof() {
-    // LEXEME (TOKEN)
-    // eof <- !.
     var $$;
     _token = 5;  
     _tokenStart = _cursor;  
-    // => !. # Choice
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      // EOF
       case 0:
       case 2:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => !.
         var ch0 = _ch, pos0 = _cursor, testing0 = _testing; 
         _testing = _inputLen + 1;
-        // => .
         $$ = _matchAny();
-        // <= .
         _ch = ch0;
         _cursor = pos0; 
         _testing = testing0;
         $$ = null;
         success = !success;
-        // <= !.
         _startPos = startPos0;
         break;
-      // No matches
       case 1:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: eof
       _failure(_expect15);
     }
-    // <= !. # Choice
     _token = null;
     _tokenStart = null;
     return $$;
   }
   
   dynamic _parse_eq() {
-    // MORHEME
-    // eq <- '==' spaces
     var $$;
-    // => '==' spaces # Choice
     switch (_ch == 61 ? 0 : _ch == -1 ? 2 : 1) {
-      // [=]
       case 0:
-        // => '==' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '=='
           $$ = _matchString(_strings5, '==');
-          // <= '=='
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '=='
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -2434,27 +1968,19 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '==' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: ==
       _failure(_expect26);
     }
-    // <= '==' spaces # Choice
     return $$;
   }
   
   dynamic _parse_equality_expression() {
-    // SENTENCE (NONTERMINAL)
-    // equality_expression <- relational_expression (equality_operator relational_expression)*
     var $$;          
     var pos = _cursor;             
     if(_cachePos[7] >= pos) {
@@ -2465,39 +1991,28 @@ class ExprParser {
     } else {
       _cachePos[7] = pos;
     }  
-    // => relational_expression (equality_operator relational_expression)* # Choice
     switch (_getState(_transitions0)) {
-      // [!] [\'-(] [+] [--.] [0-9] [A-Z] [\\] [_] [a-z] [~]
       case 0:
-        // => relational_expression (equality_operator relational_expression)* # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => relational_expression
           $$ = _parse_relational_expression();
-          // <= relational_expression
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => (equality_operator relational_expression)*
           var testing0 = _testing; 
           for (var reps = []; ; ) {
             _testing = _cursor;
-            // => (equality_operator relational_expression) # Choice
             switch (_getState(_transitions1)) {
-              // [!] [=]
               case 0:
-                // => equality_operator relational_expression # Sequence
+              case 2:
                 var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
                 _startPos = _cursor;
                 while (true) {  
-                  // => equality_operator
                   $$ = _parse_equality_operator();
-                  // <= equality_operator
                   if (!success) break;
                   var seq = new List(2)..[0] = $$;
-                  // => relational_expression
                   $$ = _parse_relational_expression();
-                  // <= relational_expression
                   if (!success) break;
                   seq[1] = $$;
                   $$ = seq;
@@ -2508,21 +2023,15 @@ class ExprParser {
                   _cursor = pos1;
                 }
                 _startPos = startPos1;
-                // <= equality_operator relational_expression # Sequence
                 break;
-              // No matches
-              // EOF
               case 1:
-              case 2:
                 $$ = null;
                 success = false;
                 break;
             }
             if (!success && _cursor > _testing) {
-              // Expected: equality_operator
               _failure(_expect6);
             }
-            // <= (equality_operator relational_expression) # Choice
             if (success) {  
               reps.add($$);
             } else {
@@ -2532,14 +2041,11 @@ class ExprParser {
               break; 
             }
           }
-          // <= (equality_operator relational_expression)*
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // relational_expression
             final $1 = seq[0];
-            // (equality_operator relational_expression)*
             final $2 = seq[1];
             final $start = startPos0;
             $$ = _buildBinary($1, $2);
@@ -2551,21 +2057,15 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= relational_expression (equality_operator relational_expression)* # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined', identifier, constant, '(', unary_operator
       _failure(_expect0);
     }
-    // <= relational_expression (equality_operator relational_expression)* # Choice
     if (_cacheable[7]) {
       _addToCache($$, pos, 7);
     }    
@@ -2573,137 +2073,110 @@ class ExprParser {
   }
   
   dynamic _parse_equality_operator() {
-    // LEXEME (TOKEN)
-    // equality_operator <- eq / neq
     var $$;
     _token = 6;  
     _tokenStart = _cursor;  
-    // => eq / neq # Choice
     switch (_getState(_transitions10)) {
-      // [!]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => neq
         $$ = _parse_neq();
-        // <= neq
         _startPos = startPos0;
         break;
-      // [=]
       case 1:
         var startPos1 = _startPos;
         _startPos = _cursor;
-        // => eq
         $$ = _parse_eq();
-        // <= eq
         _startPos = startPos1;
         break;
-      // No matches
-      // EOF
       case 2:
-      case 3:
         $$ = null;
         success = false;
         break;
+      case 3:
+        while (true) {
+          var startPos2 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_eq();
+          _startPos = startPos2;
+          if (success) break;
+          var startPos3 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_neq();
+          _startPos = startPos3;
+          break;
+        }
+        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: equality_operator
       _failure(_expect6);
     }
-    // <= eq / neq # Choice
     _token = null;
     _tokenStart = null;
     return $$;
   }
   
   dynamic _parse_escape_sequence() {
-    // MORHEME
-    // escape_sequence <- simple_escape_sequence / octal_escape_sequence / hexadecimal_escape_sequence / universal_character_name
     var $$;
-    // => simple_escape_sequence / octal_escape_sequence / hexadecimal_escape_sequence / universal_character_name # Choice
     switch (_ch == 92 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\\]
       case 0:
         while (true) {
           var startPos0 = _startPos;
           _startPos = _cursor;
-          // => simple_escape_sequence
           $$ = _parse_simple_escape_sequence();
-          // <= simple_escape_sequence
           _startPos = startPos0;
           if (success) break;
           var startPos1 = _startPos;
           _startPos = _cursor;
-          // => octal_escape_sequence
           $$ = _parse_octal_escape_sequence();
-          // <= octal_escape_sequence
           _startPos = startPos1;
           if (success) break;
           var startPos2 = _startPos;
           _startPos = _cursor;
-          // => hexadecimal_escape_sequence
           $$ = _parse_hexadecimal_escape_sequence();
-          // <= hexadecimal_escape_sequence
           _startPos = startPos2;
           if (success) break;
           var startPos3 = _startPos;
           _startPos = _cursor;
-          // => universal_character_name
           $$ = _parse_universal_character_name();
-          // <= universal_character_name
           _startPos = startPos3;
           break;
         }
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
+      case 2:
+        var startPos4 = _startPos;
+        _startPos = _cursor;
+        $$ = _parse_hexadecimal_escape_sequence();
+        _startPos = startPos4;
+        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= simple_escape_sequence / octal_escape_sequence / hexadecimal_escape_sequence / universal_character_name # Choice
     return $$;
   }
   
   dynamic _parse_exclamation() {
-    // MORHEME
-    // exclamation <- '!' spaces
     var $$;
-    // => '!' spaces # Choice
     switch (_ch == 33 ? 0 : _ch == -1 ? 2 : 1) {
-      // [!]
       case 0:
-        // => '!' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '!'
-          $$ = '!';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= '!'
+          $$ = _matchChar(33, '!');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '!'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -2715,27 +2188,19 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '!' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: !
       _failure(_expect27);
     }
-    // <= '!' spaces # Choice
     return $$;
   }
   
   dynamic _parse_exclusive_or_expression() {
-    // SENTENCE (NONTERMINAL)
-    // exclusive_or_expression <- and_expression (xor and_expression)*
     var $$;          
     var pos = _cursor;             
     if(_cachePos[5] >= pos) {
@@ -2746,39 +2211,28 @@ class ExprParser {
     } else {
       _cachePos[5] = pos;
     }  
-    // => and_expression (xor and_expression)* # Choice
     switch (_getState(_transitions0)) {
-      // [!] [\'-(] [+] [--.] [0-9] [A-Z] [\\] [_] [a-z] [~]
       case 0:
-        // => and_expression (xor and_expression)* # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => and_expression
           $$ = _parse_and_expression();
-          // <= and_expression
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => (xor and_expression)*
           var testing0 = _testing; 
           for (var reps = []; ; ) {
             _testing = _cursor;
-            // => (xor and_expression) # Choice
             switch (_ch == 94 ? 0 : _ch == -1 ? 2 : 1) {
-              // [^]
               case 0:
-                // => xor and_expression # Sequence
+              case 2:
                 var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
                 _startPos = _cursor;
                 while (true) {  
-                  // => xor
                   $$ = _parse_xor();
-                  // <= xor
                   if (!success) break;
                   var seq = new List(2)..[0] = $$;
-                  // => and_expression
                   $$ = _parse_and_expression();
-                  // <= and_expression
                   if (!success) break;
                   seq[1] = $$;
                   $$ = seq;
@@ -2789,21 +2243,15 @@ class ExprParser {
                   _cursor = pos1;
                 }
                 _startPos = startPos1;
-                // <= xor and_expression # Sequence
                 break;
-              // No matches
-              // EOF
               case 1:
-              case 2:
                 $$ = null;
                 success = false;
                 break;
             }
             if (!success && _cursor > _testing) {
-              // Expected: '^'
               _failure(_expect4);
             }
-            // <= (xor and_expression) # Choice
             if (success) {  
               reps.add($$);
             } else {
@@ -2813,14 +2261,11 @@ class ExprParser {
               break; 
             }
           }
-          // <= (xor and_expression)*
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // and_expression
             final $1 = seq[0];
-            // (xor and_expression)*
             final $2 = seq[1];
             final $start = startPos0;
             $$ = _buildBinary($1, $2);
@@ -2832,21 +2277,15 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= and_expression (xor and_expression)* # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined', identifier, constant, '(', unary_operator
       _failure(_expect0);
     }
-    // <= and_expression (xor and_expression)* # Choice
     if (_cacheable[5]) {
       _addToCache($$, pos, 5);
     }    
@@ -2854,45 +2293,26 @@ class ExprParser {
   }
   
   dynamic _parse_exponent_part() {
-    // MORHEME
-    // exponent_part <- ('e' / 'E') (sign / '') digit_sequence
     var $$;
-    // => ('e' / 'E') (sign / '') digit_sequence # Choice
     switch (_getState(_transitions24)) {
-      // [E] [e]
       case 0:
-        // => ('e' / 'E') (sign / '') digit_sequence # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => ('e' / 'E') # Choice
           switch (_getState(_transitions25)) {
-            // [E]
             case 0:
               var startPos1 = _startPos;
               _startPos = _cursor;
-              // => 'E'
               $$ = _matchChar(69, 'E');
-              // <= 'E'
               _startPos = startPos1;
               break;
-            // [e]
             case 1:
               var startPos2 = _startPos;
               _startPos = _cursor;
-              // => 'e'
-              $$ = 'e';
-              success = true;
-              if (++_cursor < _inputLen) {
-                _ch = _input[_cursor];
-              } else {
-                _ch = -1;
-              }
-              // <= 'e'
+              $$ = _matchChar(101, 'e');
               _startPos = startPos2;
               break;
-            // No matches
-            // EOF
             case 2:
             case 3:
               $$ = null;
@@ -2900,71 +2320,51 @@ class ExprParser {
               break;
           }
           if (!success && _cursor > _testing) {
-            // Expected: e, E
             _failure(_expect28);
           }
-          // <= ('e' / 'E') # Choice
           if (!success) break;
           var seq = new List(3)..[0] = $$;
-          // => (sign / '') # Choice
           switch (_getState(_transitions18)) {
-            // [\u0000-*] [,] [.-\u0010ffff]
-            // EOF
             case 0:
             case 3:
               var startPos3 = _startPos;
               _startPos = _cursor;
-              // => ''
               success = true;
               $$ = '';
-              // <= ''
               _startPos = startPos3;
               break;
-            // [+] [-]
             case 1:
               while (true) {
                 var startPos4 = _startPos;
                 _startPos = _cursor;
-                // => sign
                 $$ = _parse_sign();
-                // <= sign
                 _startPos = startPos4;
                 if (success) break;
                 var startPos5 = _startPos;
                 _startPos = _cursor;
-                // => ''
                 success = true;
                 $$ = '';
-                // <= ''
                 _startPos = startPos5;
                 break;
               }
               break;
-            // No matches
             case 2:
               $$ = null;
               success = false;
               break;
           }
           if (!success && _cursor > _testing) {
-            // Expected: 
             _failure(const [null]);
           }
-          // <= (sign / '') # Choice
           if (!success) break;
           seq[1] = $$;
-          // => digit_sequence
           $$ = _parse_digit_sequence();
-          // <= digit_sequence
           if (!success) break;
           seq[2] = $$;
           $$ = seq;
           if (success) {    
-            // ('e' / 'E')
             final $1 = seq[0];
-            // (sign / '')
             final $2 = seq[1];
-            // digit_sequence
             final $3 = seq[2];
             final $start = startPos0;
             $$ = _text();
@@ -2976,27 +2376,19 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= ('e' / 'E') (sign / '') digit_sequence # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: e, E
       _failure(_expect28);
     }
-    // <= ('e' / 'E') (sign / '') digit_sequence # Choice
     return $$;
   }
   
   dynamic _parse_expression() {
-    // SENTENCE (NONTERMINAL)
-    // expression <- conditional_expression
     var $$;          
     var pos = _cursor;             
     if(_cachePos[15] >= pos) {
@@ -3007,30 +2399,22 @@ class ExprParser {
     } else {
       _cachePos[15] = pos;
     }  
-    // => conditional_expression # Choice
     switch (_getState(_transitions0)) {
-      // [!] [\'-(] [+] [--.] [0-9] [A-Z] [\\] [_] [a-z] [~]
       case 0:
+      case 2:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => conditional_expression
         $$ = _parse_conditional_expression();
-        // <= conditional_expression
         _startPos = startPos0;
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined', identifier, constant, '(', unary_operator
       _failure(_expect0);
     }
-    // <= conditional_expression # Choice
     if (_cacheable[15]) {
       _addToCache($$, pos, 15);
     }    
@@ -3038,72 +2422,49 @@ class ExprParser {
   }
   
   dynamic _parse_floating_constant_base() {
-    // MORHEME
-    // floating_constant_base <- decimal_floating_constant / hexadecimal_floating_constant
     var $$;
-    // => decimal_floating_constant / hexadecimal_floating_constant # Choice
     switch (_getState(_transitions23)) {
-      // [.]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => decimal_floating_constant
         $$ = _parse_decimal_floating_constant();
-        // <= decimal_floating_constant
         _startPos = startPos0;
         break;
-      // [0-9]
       case 1:
+      case 3:
         while (true) {
           var startPos1 = _startPos;
           _startPos = _cursor;
-          // => decimal_floating_constant
           $$ = _parse_decimal_floating_constant();
-          // <= decimal_floating_constant
           _startPos = startPos1;
           if (success) break;
           var startPos2 = _startPos;
           _startPos = _cursor;
-          // => hexadecimal_floating_constant
           $$ = _parse_hexadecimal_floating_constant();
-          // <= hexadecimal_floating_constant
           _startPos = startPos2;
           break;
         }
         break;
-      // No matches
-      // EOF
       case 2:
-      case 3:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= decimal_floating_constant / hexadecimal_floating_constant # Choice
     return $$;
   }
   
   dynamic _parse_floating_suffix() {
-    // MORHEME
-    // floating_suffix <- [FLfl]
     var $$;
-    // => [FLfl] # Choice
     switch (_getState(_transitions26)) {
-      // [F] [L] [f] [l]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => [FLfl]
         $$ = _matchMapping(70, 108, _mapping2);
-        // <= [FLfl]
         _startPos = startPos0;
         break;
-      // No matches
-      // EOF
       case 1:
       case 2:
         $$ = null;
@@ -3111,53 +2472,36 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= [FLfl] # Choice
     return $$;
   }
   
   dynamic _parse_fractional_constant() {
-    // MORHEME
-    // fractional_constant <- digit_sequence? '.' digit_sequence / digit_sequence '.'
     var $$;
-    // => digit_sequence? '.' digit_sequence / digit_sequence '.' # Choice
     switch (_getState(_transitions23)) {
-      // [.]
       case 0:
-        // => digit_sequence? '.' digit_sequence # Sequence
+      case 3:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => digit_sequence?
           var testing0 = _testing;
           _testing = _cursor;
-          // => digit_sequence
           $$ = _parse_digit_sequence();
-          // <= digit_sequence
           success = true; 
           _testing = testing0;
-          // <= digit_sequence?
           if (!success) break;
           var seq = new List(3)..[0] = $$;
-          // => '.'
           $$ = _matchChar(46, '.');
-          // <= '.'
           if (!success) break;
           seq[1] = $$;
-          // => digit_sequence
           $$ = _parse_digit_sequence();
-          // <= digit_sequence
           if (!success) break;
           seq[2] = $$;
           $$ = seq;
           if (success) {    
-            // digit_sequence?
             final $1 = seq[0];
-            // '.'
             final $2 = seq[1];
-            // digit_sequence
             final $3 = seq[2];
             final $start = startPos0;
             $$ = _text();
@@ -3169,43 +2513,29 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= digit_sequence? '.' digit_sequence # Sequence
         break;
-      // [0-9]
       case 1:
         while (true) {
-          // => digit_sequence? '.' digit_sequence # Sequence
           var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => digit_sequence?
             var testing1 = _testing;
             _testing = _cursor;
-            // => digit_sequence
             $$ = _parse_digit_sequence();
-            // <= digit_sequence
             success = true; 
             _testing = testing1;
-            // <= digit_sequence?
             if (!success) break;
             var seq = new List(3)..[0] = $$;
-            // => '.'
             $$ = _matchChar(46, '.');
-            // <= '.'
             if (!success) break;
             seq[1] = $$;
-            // => digit_sequence
             $$ = _parse_digit_sequence();
-            // <= digit_sequence
             if (!success) break;
             seq[2] = $$;
             $$ = seq;
             if (success) {    
-              // digit_sequence?
               final $1 = seq[0];
-              // '.'
               final $2 = seq[1];
-              // digit_sequence
               final $3 = seq[2];
               final $start = startPos1;
               $$ = _text();
@@ -3217,27 +2547,19 @@ class ExprParser {
             _cursor = pos1;
           }
           _startPos = startPos1;
-          // <= digit_sequence? '.' digit_sequence # Sequence
           if (success) break;
-          // => digit_sequence '.' # Sequence
           var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => digit_sequence
             $$ = _parse_digit_sequence();
-            // <= digit_sequence
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => '.'
             $$ = _matchChar(46, '.');
-            // <= '.'
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // digit_sequence
               final $1 = seq[0];
-              // '.'
               final $2 = seq[1];
               final $start = startPos2;
               $$ = _text();
@@ -3249,59 +2571,37 @@ class ExprParser {
             _cursor = pos2;
           }
           _startPos = startPos2;
-          // <= digit_sequence '.' # Sequence
           break;
         }
         break;
-      // No matches
-      // EOF
       case 2:
-      case 3:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= digit_sequence? '.' digit_sequence / digit_sequence '.' # Choice
     return $$;
   }
   
   dynamic _parse_gt() {
-    // MORHEME
-    // gt <- '>' spaces
     var $$;
-    // => '>' spaces # Choice
     switch (_ch == 62 ? 0 : _ch == -1 ? 2 : 1) {
-      // [>]
       case 0:
-        // => '>' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '>'
-          $$ = '>';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= '>'
+          $$ = _matchChar(62, '>');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '>'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -3313,51 +2613,35 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '>' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: >
       _failure(_expect29);
     }
-    // <= '>' spaces # Choice
     return $$;
   }
   
   dynamic _parse_gte() {
-    // MORHEME
-    // gte <- '>=' spaces
     var $$;
-    // => '>=' spaces # Choice
     switch (_ch == 62 ? 0 : _ch == -1 ? 2 : 1) {
-      // [>]
       case 0:
-        // => '>=' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '>='
           $$ = _matchString(_strings6, '>=');
-          // <= '>='
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '>='
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -3369,65 +2653,42 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '>=' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: >=
       _failure(_expect30);
     }
-    // <= '>=' spaces # Choice
     return $$;
   }
   
   dynamic _parse_hex_quad() {
-    // MORHEME
-    // hex_quad <- hexadecimal_digit hexadecimal_digit hexadecimal_digit hexadecimal_digit
     var $$;
-    // => hexadecimal_digit hexadecimal_digit hexadecimal_digit hexadecimal_digit # Choice
     switch (_getState(_transitions27)) {
-      // [0-9] [A-F] [a-f]
       case 0:
-        // => hexadecimal_digit hexadecimal_digit hexadecimal_digit hexadecimal_digit # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => hexadecimal_digit
           $$ = _parse_hexadecimal_digit();
-          // <= hexadecimal_digit
           if (!success) break;
           var seq = new List(4)..[0] = $$;
-          // => hexadecimal_digit
           $$ = _parse_hexadecimal_digit();
-          // <= hexadecimal_digit
           if (!success) break;
           seq[1] = $$;
-          // => hexadecimal_digit
           $$ = _parse_hexadecimal_digit();
-          // <= hexadecimal_digit
           if (!success) break;
           seq[2] = $$;
-          // => hexadecimal_digit
           $$ = _parse_hexadecimal_digit();
-          // <= hexadecimal_digit
           if (!success) break;
           seq[3] = $$;
           $$ = seq;
           if (success) {    
-            // hexadecimal_digit
             final $1 = seq[0];
-            // hexadecimal_digit
             final $2 = seq[1];
-            // hexadecimal_digit
             final $3 = seq[2];
-            // hexadecimal_digit
             final $4 = seq[3];
             final $start = startPos0;
             $$ = _text();
@@ -3439,10 +2700,7 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= hexadecimal_digit hexadecimal_digit hexadecimal_digit hexadecimal_digit # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
       case 2:
         $$ = null;
@@ -3450,47 +2708,32 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= hexadecimal_digit hexadecimal_digit hexadecimal_digit hexadecimal_digit # Choice
     return $$;
   }
   
   dynamic _parse_hexadecimal_constant() {
-    // MORHEME
-    // hexadecimal_constant <- hexadecimal_prefix hexadecimal_digit hexadecimal_constant1
     var $$;
-    // => hexadecimal_prefix hexadecimal_digit hexadecimal_constant1 # Choice
     switch (_ch == 48 ? 0 : _ch == -1 ? 2 : 1) {
-      // [0]
       case 0:
-        // => hexadecimal_prefix hexadecimal_digit hexadecimal_constant1 # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => hexadecimal_prefix
           $$ = _parse_hexadecimal_prefix();
-          // <= hexadecimal_prefix
           if (!success) break;
           var seq = new List(3)..[0] = $$;
-          // => hexadecimal_digit
           $$ = _parse_hexadecimal_digit();
-          // <= hexadecimal_digit
           if (!success) break;
           seq[1] = $$;
-          // => hexadecimal_constant1
           $$ = _parse_hexadecimal_constant1();
-          // <= hexadecimal_constant1
           if (!success) break;
           seq[2] = $$;
           $$ = seq;
           if (success) {    
-            // hexadecimal_prefix
             final $1 = seq[0];
-            // hexadecimal_digit
             final $2 = seq[1];
-            // hexadecimal_constant1
             final $3 = seq[2];
             final $start = startPos0;
             $$ = int.parse(_text(2), radix: 16);
@@ -3502,57 +2745,38 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= hexadecimal_prefix hexadecimal_digit hexadecimal_constant1 # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 0x, 0X
       _failure(_expect31);
     }
-    // <= hexadecimal_prefix hexadecimal_digit hexadecimal_constant1 # Choice
     return $$;
   }
   
   dynamic _parse_hexadecimal_constant1() {
-    // MORHEME
-    // hexadecimal_constant1 <- hexadecimal_digit hexadecimal_constant1 / ''
     var $$;
-    // => hexadecimal_digit hexadecimal_constant1 / '' # Choice
     switch (_getState(_transitions28)) {
-      // [\u0000-/] [:-@] [G-`] [g-\u0010ffff]
-      // EOF
       case 0:
-      case 3:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => ''
         success = true;
         $$ = '';
-        // <= ''
         _startPos = startPos0;
         break;
-      // [0-9] [A-F] [a-f]
       case 1:
+      case 3:
         while (true) {
-          // => hexadecimal_digit hexadecimal_constant1 # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => hexadecimal_digit
             $$ = _parse_hexadecimal_digit();
-            // <= hexadecimal_digit
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => hexadecimal_constant1
             $$ = _parse_hexadecimal_constant1();
-            // <= hexadecimal_constant1
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
@@ -3563,49 +2787,35 @@ class ExprParser {
             _cursor = pos0;
           }
           _startPos = startPos1;
-          // <= hexadecimal_digit hexadecimal_constant1 # Sequence
           if (success) break;
           var startPos2 = _startPos;
           _startPos = _cursor;
-          // => ''
           success = true;
           $$ = '';
-          // <= ''
           _startPos = startPos2;
           break;
         }
         break;
-      // No matches
       case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= hexadecimal_digit hexadecimal_constant1 / '' # Choice
     return $$;
   }
   
   dynamic _parse_hexadecimal_digit() {
-    // MORHEME
-    // hexadecimal_digit <- [0-9A-Fa-f]
     var $$;
-    // => [0-9A-Fa-f] # Choice
     switch (_getState(_transitions27)) {
-      // [0-9] [A-F] [a-f]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => [0-9A-Fa-f]
         $$ = _matchMapping(48, 102, _mapping3);
-        // <= [0-9A-Fa-f]
         _startPos = startPos0;
         break;
-      // No matches
-      // EOF
       case 1:
       case 2:
         $$ = null;
@@ -3613,29 +2823,20 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= [0-9A-Fa-f] # Choice
     return $$;
   }
   
   dynamic _parse_hexadecimal_digit_sequence() {
-    // MORHEME
-    // hexadecimal_digit_sequence <- hexadecimal_digit+
     var $$;
-    // => hexadecimal_digit+ # Choice
     switch (_getState(_transitions27)) {
-      // [0-9] [A-F] [a-f]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => hexadecimal_digit+
         var testing0;
         for (var first = true, reps; ;) {  
-          // => hexadecimal_digit  
           $$ = _parse_hexadecimal_digit();  
-          // <= hexadecimal_digit  
           if (success) {
            if (first) {      
               first = false;
@@ -3654,17 +2855,13 @@ class ExprParser {
             break;
           }  
         }
-        // <= hexadecimal_digit+
         if (success) {    
-          // hexadecimal_digit+
           final $1 = $$;
           final $start = startPos0;
           $$ = _text();
         }
         _startPos = startPos0;
         break;
-      // No matches
-      // EOF
       case 1:
       case 2:
         $$ = null;
@@ -3672,47 +2869,32 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= hexadecimal_digit+ # Choice
     return $$;
   }
   
   dynamic _parse_hexadecimal_escape_sequence() {
-    // MORHEME
-    // hexadecimal_escape_sequence <- '\\x' hexadecimal_digit hexadecimal_escape_sequence1
     var $$;
-    // => '\\x' hexadecimal_digit hexadecimal_escape_sequence1 # Choice
     switch (_ch == 92 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\\]
       case 0:
-        // => '\\x' hexadecimal_digit hexadecimal_escape_sequence1 # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '\\x'
           $$ = _matchString(_strings7, '\\x');
-          // <= '\\x'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
-          // => hexadecimal_digit
           $$ = _parse_hexadecimal_digit();
-          // <= hexadecimal_digit
           if (!success) break;
           seq[1] = $$;
-          // => hexadecimal_escape_sequence1
           $$ = _parse_hexadecimal_escape_sequence1();
-          // <= hexadecimal_escape_sequence1
           if (!success) break;
           seq[2] = $$;
           $$ = seq;
           if (success) {    
-            // '\\x'
             final $1 = seq[0];
-            // hexadecimal_digit
             final $2 = seq[1];
-            // hexadecimal_escape_sequence1
             final $3 = seq[2];
             final $start = startPos0;
             $$ = int.parse(_text(2), radix: 16);
@@ -3724,64 +2906,43 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '\\x' hexadecimal_digit hexadecimal_escape_sequence1 # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: \x
       _failure(_expect32);
     }
-    // <= '\\x' hexadecimal_digit hexadecimal_escape_sequence1 # Choice
     return $$;
   }
   
   dynamic _parse_hexadecimal_escape_sequence1() {
-    // MORHEME
-    // hexadecimal_escape_sequence1 <- hexadecimal_digit hexadecimal_escape_sequence1 / ''
     var $$;
-    // => hexadecimal_digit hexadecimal_escape_sequence1 / '' # Choice
     switch (_getState(_transitions28)) {
-      // [\u0000-/] [:-@] [G-`] [g-\u0010ffff]
-      // EOF
       case 0:
-      case 3:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => ''
         success = true;
         $$ = '';
-        // <= ''
         _startPos = startPos0;
         break;
-      // [0-9] [A-F] [a-f]
       case 1:
+      case 3:
         while (true) {
-          // => hexadecimal_digit hexadecimal_escape_sequence1 # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => hexadecimal_digit
             $$ = _parse_hexadecimal_digit();
-            // <= hexadecimal_digit
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => hexadecimal_escape_sequence1
             $$ = _parse_hexadecimal_escape_sequence1();
-            // <= hexadecimal_escape_sequence1
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // hexadecimal_digit
               final $1 = seq[0];
-              // hexadecimal_escape_sequence1
               final $2 = seq[1];
               final $start = startPos1;
               $$ = _text();
@@ -3793,80 +2954,56 @@ class ExprParser {
             _cursor = pos0;
           }
           _startPos = startPos1;
-          // <= hexadecimal_digit hexadecimal_escape_sequence1 # Sequence
           if (success) break;
           var startPos2 = _startPos;
           _startPos = _cursor;
-          // => ''
           success = true;
           $$ = '';
-          // <= ''
           _startPos = startPos2;
           break;
         }
         break;
-      // No matches
       case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= hexadecimal_digit hexadecimal_escape_sequence1 / '' # Choice
     return $$;
   }
   
   dynamic _parse_hexadecimal_floating_constant() {
-    // MORHEME
-    // hexadecimal_floating_constant <- hexadecimal_prefix hexadecimal_fractional_constant binary_exponent_part floating_suffix? / hexadecimal_prefix hexadecimal_digit_sequence binary_exponent_part floating_suffix?
     var $$;
-    // => hexadecimal_prefix hexadecimal_fractional_constant binary_exponent_part floating_suffix? / hexadecimal_prefix hexadecimal_digit_sequence binary_exponent_part floating_suffix? # Choice
     switch (_ch == 48 ? 0 : _ch == -1 ? 2 : 1) {
-      // [0]
       case 0:
+      case 2:
         while (true) {
-          // => hexadecimal_prefix hexadecimal_fractional_constant binary_exponent_part floating_suffix? # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => hexadecimal_prefix
             $$ = _parse_hexadecimal_prefix();
-            // <= hexadecimal_prefix
             if (!success) break;
             var seq = new List(4)..[0] = $$;
-            // => hexadecimal_fractional_constant
             $$ = _parse_hexadecimal_fractional_constant();
-            // <= hexadecimal_fractional_constant
             if (!success) break;
             seq[1] = $$;
-            // => binary_exponent_part
             $$ = _parse_binary_exponent_part();
-            // <= binary_exponent_part
             if (!success) break;
             seq[2] = $$;
-            // => floating_suffix?
             var testing0 = _testing;
             _testing = _cursor;
-            // => floating_suffix
             $$ = _parse_floating_suffix();
-            // <= floating_suffix
             success = true; 
             _testing = testing0;
-            // <= floating_suffix?
             if (!success) break;
             seq[3] = $$;
             $$ = seq;
             if (success) {    
-              // hexadecimal_prefix
               final $1 = seq[0];
-              // hexadecimal_fractional_constant
               final $2 = seq[1];
-              // binary_exponent_part
               final $3 = seq[2];
-              // floating_suffix?
               final $4 = seq[3];
               final $start = startPos0;
               $$ = _floatLiteral(_text(), $start);
@@ -3878,47 +3015,31 @@ class ExprParser {
             _cursor = pos0;
           }
           _startPos = startPos0;
-          // <= hexadecimal_prefix hexadecimal_fractional_constant binary_exponent_part floating_suffix? # Sequence
           if (success) break;
-          // => hexadecimal_prefix hexadecimal_digit_sequence binary_exponent_part floating_suffix? # Sequence
           var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => hexadecimal_prefix
             $$ = _parse_hexadecimal_prefix();
-            // <= hexadecimal_prefix
             if (!success) break;
             var seq = new List(4)..[0] = $$;
-            // => hexadecimal_digit_sequence
             $$ = _parse_hexadecimal_digit_sequence();
-            // <= hexadecimal_digit_sequence
             if (!success) break;
             seq[1] = $$;
-            // => binary_exponent_part
             $$ = _parse_binary_exponent_part();
-            // <= binary_exponent_part
             if (!success) break;
             seq[2] = $$;
-            // => floating_suffix?
             var testing1 = _testing;
             _testing = _cursor;
-            // => floating_suffix
             $$ = _parse_floating_suffix();
-            // <= floating_suffix
             success = true; 
             _testing = testing1;
-            // <= floating_suffix?
             if (!success) break;
             seq[3] = $$;
             $$ = seq;
             if (success) {    
-              // hexadecimal_prefix
               final $1 = seq[0];
-              // hexadecimal_digit_sequence
               final $2 = seq[1];
-              // binary_exponent_part
               final $3 = seq[2];
-              // floating_suffix?
               final $4 = seq[3];
               final $start = startPos1;
               $$ = _floatLiteral(_text(), $start);
@@ -3930,57 +3051,39 @@ class ExprParser {
             _cursor = pos1;
           }
           _startPos = startPos1;
-          // <= hexadecimal_prefix hexadecimal_digit_sequence binary_exponent_part floating_suffix? # Sequence
           break;
         }
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 0x, 0X
       _failure(_expect31);
     }
-    // <= hexadecimal_prefix hexadecimal_fractional_constant binary_exponent_part floating_suffix? / hexadecimal_prefix hexadecimal_digit_sequence binary_exponent_part floating_suffix? # Choice
     return $$;
   }
   
   dynamic _parse_hexadecimal_fractional_constant() {
-    // MORHEME
-    // hexadecimal_fractional_constant <- hexadecimal_digit_sequence? '.' hexadecimal_digit_sequence / hexadecimal_digit_sequence '.'
     var $$;
-    // => hexadecimal_digit_sequence? '.' hexadecimal_digit_sequence / hexadecimal_digit_sequence '.' # Choice
     switch (_getState(_transitions29)) {
-      // [.]
       case 0:
-        // => hexadecimal_digit_sequence? '.' hexadecimal_digit_sequence # Sequence
+      case 3:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => hexadecimal_digit_sequence?
           var testing0 = _testing;
           _testing = _cursor;
-          // => hexadecimal_digit_sequence
           $$ = _parse_hexadecimal_digit_sequence();
-          // <= hexadecimal_digit_sequence
           success = true; 
           _testing = testing0;
-          // <= hexadecimal_digit_sequence?
           if (!success) break;
           var seq = new List(3)..[0] = $$;
-          // => '.'
           $$ = _matchChar(46, '.');
-          // <= '.'
           if (!success) break;
           seq[1] = $$;
-          // => hexadecimal_digit_sequence
           $$ = _parse_hexadecimal_digit_sequence();
-          // <= hexadecimal_digit_sequence
           if (!success) break;
           seq[2] = $$;
           $$ = seq;
@@ -3991,34 +3094,23 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= hexadecimal_digit_sequence? '.' hexadecimal_digit_sequence # Sequence
         break;
-      // [0-9] [A-F] [a-f]
       case 1:
         while (true) {
-          // => hexadecimal_digit_sequence? '.' hexadecimal_digit_sequence # Sequence
           var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => hexadecimal_digit_sequence?
             var testing1 = _testing;
             _testing = _cursor;
-            // => hexadecimal_digit_sequence
             $$ = _parse_hexadecimal_digit_sequence();
-            // <= hexadecimal_digit_sequence
             success = true; 
             _testing = testing1;
-            // <= hexadecimal_digit_sequence?
             if (!success) break;
             var seq = new List(3)..[0] = $$;
-            // => '.'
             $$ = _matchChar(46, '.');
-            // <= '.'
             if (!success) break;
             seq[1] = $$;
-            // => hexadecimal_digit_sequence
             $$ = _parse_hexadecimal_digit_sequence();
-            // <= hexadecimal_digit_sequence
             if (!success) break;
             seq[2] = $$;
             $$ = seq;
@@ -4029,20 +3121,14 @@ class ExprParser {
             _cursor = pos1;
           }
           _startPos = startPos1;
-          // <= hexadecimal_digit_sequence? '.' hexadecimal_digit_sequence # Sequence
           if (success) break;
-          // => hexadecimal_digit_sequence '.' # Sequence
           var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => hexadecimal_digit_sequence
             $$ = _parse_hexadecimal_digit_sequence();
-            // <= hexadecimal_digit_sequence
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => '.'
             $$ = _matchChar(46, '.');
-            // <= '.'
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
@@ -4053,53 +3139,37 @@ class ExprParser {
             _cursor = pos2;
           }
           _startPos = startPos2;
-          // <= hexadecimal_digit_sequence '.' # Sequence
           break;
         }
         break;
-      // No matches
-      // EOF
       case 2:
-      case 3:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= hexadecimal_digit_sequence? '.' hexadecimal_digit_sequence / hexadecimal_digit_sequence '.' # Choice
     return $$;
   }
   
   dynamic _parse_hexadecimal_prefix() {
-    // MORHEME
-    // hexadecimal_prefix <- '0x' / '0X'
     var $$;
-    // => '0x' / '0X' # Choice
     switch (_ch == 48 ? 0 : _ch == -1 ? 2 : 1) {
-      // [0]
       case 0:
         while (true) {
           var startPos0 = _startPos;
           _startPos = _cursor;
-          // => '0x'
           $$ = _matchString(_strings8, '0x');
-          // <= '0x'
           _startPos = startPos0;
           if (success) break;
           var startPos1 = _startPos;
           _startPos = _cursor;
-          // => '0X'
           $$ = _matchString(_strings9, '0X');
-          // <= '0X'
           _startPos = startPos1;
           break;
         }
         break;
-      // No matches
-      // EOF
       case 1:
       case 2:
         $$ = null;
@@ -4107,16 +3177,12 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 0x, 0X
       _failure(_expect31);
     }
-    // <= '0x' / '0X' # Choice
     return $$;
   }
   
   dynamic _parse_identifier() {
-    // LEXEME (TOKEN)
-    // identifier <- identifier_base spaces2
     var $$;          
     var pos = _cursor;             
     if(_cachePos[24] >= pos) {
@@ -4129,29 +3195,21 @@ class ExprParser {
     }  
     _token = 7;    
     _tokenStart = _cursor;    
-    // => identifier_base spaces2 # Choice
     switch (_getState(_transitions11)) {
-      // [A-Z] [\\] [_] [a-z]
       case 0:
-        // => identifier_base spaces2 # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => identifier_base
           $$ = _parse_identifier_base();
-          // <= identifier_base
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces2
           $$ = _parse_spaces2();
-          // <= spaces2
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // identifier_base
             final $1 = seq[0];
-            // spaces2
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -4163,21 +3221,15 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= identifier_base spaces2 # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: identifier
       _failure(_expect16);
     }
-    // <= identifier_base spaces2 # Choice
     if (_cacheable[24]) {
       _addToCache($$, pos, 24);
     }    
@@ -4187,32 +3239,22 @@ class ExprParser {
   }
   
   dynamic _parse_identifier_base() {
-    // MORHEME
-    // identifier_base <- identifier_nondigit identifier_base1
     var $$;
-    // => identifier_nondigit identifier_base1 # Choice
     switch (_getState(_transitions11)) {
-      // [A-Z] [\\] [_] [a-z]
       case 0:
-        // => identifier_nondigit identifier_base1 # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => identifier_nondigit
           $$ = _parse_identifier_nondigit();
-          // <= identifier_nondigit
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => identifier_base1
           $$ = _parse_identifier_base1();
-          // <= identifier_base1
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // identifier_nondigit
             final $1 = seq[0];
-            // identifier_base1
             final $2 = seq[1];
             final $start = startPos0;
             $$ = new Identifier(name: _text(), position: $start);
@@ -4224,64 +3266,42 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= identifier_nondigit identifier_base1 # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= identifier_nondigit identifier_base1 # Choice
     return $$;
   }
   
   dynamic _parse_identifier_base1() {
-    // MORHEME
-    // identifier_base1 <- identifier_nondigit identifier_base1 / digit identifier_base1 / ''
     var $$;
-    // => identifier_nondigit identifier_base1 / digit identifier_base1 / '' # Choice
     switch (_getState(_transitions30)) {
-      // [\u0000-/] [:-@] [[] []-^] [`] [{-\u0010ffff]
-      // EOF
       case 0:
-      case 4:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => ''
         success = true;
         $$ = '';
-        // <= ''
         _startPos = startPos0;
         break;
-      // [0-9]
       case 1:
         while (true) {
-          // => digit identifier_base1 # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => digit
             $$ = _parse_digit();
-            // <= digit
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => identifier_base1
             $$ = _parse_identifier_base1();
-            // <= identifier_base1
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // digit
               final $1 = seq[0];
-              // identifier_base1
               final $2 = seq[1];
               final $start = startPos1;
               $$ = _text();
@@ -4293,40 +3313,29 @@ class ExprParser {
             _cursor = pos0;
           }
           _startPos = startPos1;
-          // <= digit identifier_base1 # Sequence
           if (success) break;
           var startPos2 = _startPos;
           _startPos = _cursor;
-          // => ''
           success = true;
           $$ = '';
-          // <= ''
           _startPos = startPos2;
           break;
         }
         break;
-      // [A-Z] [\\] [_] [a-z]
       case 2:
         while (true) {
-          // => identifier_nondigit identifier_base1 # Sequence
           var ch1 = _ch, pos1 = _cursor, startPos3 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => identifier_nondigit
             $$ = _parse_identifier_nondigit();
-            // <= identifier_nondigit
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => identifier_base1
             $$ = _parse_identifier_base1();
-            // <= identifier_base1
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // identifier_nondigit
               final $1 = seq[0];
-              // identifier_base1
               final $2 = seq[1];
               final $start = startPos3;
               $$ = _text();
@@ -4338,58 +3347,99 @@ class ExprParser {
             _cursor = pos1;
           }
           _startPos = startPos3;
-          // <= identifier_nondigit identifier_base1 # Sequence
           if (success) break;
           var startPos4 = _startPos;
           _startPos = _cursor;
-          // => ''
           success = true;
           $$ = '';
-          // <= ''
           _startPos = startPos4;
           break;
         }
         break;
-      // No matches
       case 3:
         $$ = null;
         success = false;
         break;
+      case 4:
+        while (true) {
+          var ch2 = _ch, pos2 = _cursor, startPos5 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            $$ = _parse_identifier_nondigit();
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            $$ = _parse_identifier_base1();
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            if (success) {    
+              final $1 = seq[0];
+              final $2 = seq[1];
+              final $start = startPos5;
+              $$ = _text();
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch2;
+            _cursor = pos2;
+          }
+          _startPos = startPos5;
+          if (success) break;
+          var ch3 = _ch, pos3 = _cursor, startPos6 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            $$ = _parse_digit();
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            $$ = _parse_identifier_base1();
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            if (success) {    
+              final $1 = seq[0];
+              final $2 = seq[1];
+              final $start = startPos6;
+              $$ = _text();
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch3;
+            _cursor = pos3;
+          }
+          _startPos = startPos6;
+          if (success) break;
+          var startPos7 = _startPos;
+          _startPos = _cursor;
+          success = true;
+          $$ = '';
+          _startPos = startPos7;
+          break;
+        }
+        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= identifier_nondigit identifier_base1 / digit identifier_base1 / '' # Choice
     return $$;
   }
   
   dynamic _parse_identifier_nondigit() {
-    // MORHEME
-    // identifier_nondigit <- nondigit / universal_character_name
     var $$;
-    // => nondigit / universal_character_name # Choice
     switch (_getState(_transitions31)) {
-      // [A-Z] [_] [a-z]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => nondigit
         $$ = _parse_nondigit();
-        // <= nondigit
         _startPos = startPos0;
         break;
-      // [\\]
       case 1:
         var startPos1 = _startPos;
         _startPos = _cursor;
-        // => universal_character_name
         $$ = _parse_universal_character_name();
-        // <= universal_character_name
         _startPos = startPos1;
         break;
-      // No matches
-      // EOF
       case 2:
       case 3:
         $$ = null;
@@ -4397,16 +3447,12 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= nondigit / universal_character_name # Choice
     return $$;
   }
   
   dynamic _parse_inclusive_or_expression() {
-    // SENTENCE (NONTERMINAL)
-    // inclusive_or_expression <- exclusive_or_expression (vertical_line exclusive_or_expression)*
     var $$;          
     var pos = _cursor;             
     if(_cachePos[4] >= pos) {
@@ -4417,39 +3463,28 @@ class ExprParser {
     } else {
       _cachePos[4] = pos;
     }  
-    // => exclusive_or_expression (vertical_line exclusive_or_expression)* # Choice
     switch (_getState(_transitions0)) {
-      // [!] [\'-(] [+] [--.] [0-9] [A-Z] [\\] [_] [a-z] [~]
       case 0:
-        // => exclusive_or_expression (vertical_line exclusive_or_expression)* # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => exclusive_or_expression
           $$ = _parse_exclusive_or_expression();
-          // <= exclusive_or_expression
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => (vertical_line exclusive_or_expression)*
           var testing0 = _testing; 
           for (var reps = []; ; ) {
             _testing = _cursor;
-            // => (vertical_line exclusive_or_expression) # Choice
             switch (_ch == 124 ? 0 : _ch == -1 ? 2 : 1) {
-              // [|]
               case 0:
-                // => vertical_line exclusive_or_expression # Sequence
+              case 2:
                 var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
                 _startPos = _cursor;
                 while (true) {  
-                  // => vertical_line
                   $$ = _parse_vertical_line();
-                  // <= vertical_line
                   if (!success) break;
                   var seq = new List(2)..[0] = $$;
-                  // => exclusive_or_expression
                   $$ = _parse_exclusive_or_expression();
-                  // <= exclusive_or_expression
                   if (!success) break;
                   seq[1] = $$;
                   $$ = seq;
@@ -4460,21 +3495,15 @@ class ExprParser {
                   _cursor = pos1;
                 }
                 _startPos = startPos1;
-                // <= vertical_line exclusive_or_expression # Sequence
                 break;
-              // No matches
-              // EOF
               case 1:
-              case 2:
                 $$ = null;
                 success = false;
                 break;
             }
             if (!success && _cursor > _testing) {
-              // Expected: '|'
               _failure(_expect3);
             }
-            // <= (vertical_line exclusive_or_expression) # Choice
             if (success) {  
               reps.add($$);
             } else {
@@ -4484,14 +3513,11 @@ class ExprParser {
               break; 
             }
           }
-          // <= (vertical_line exclusive_or_expression)*
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // exclusive_or_expression
             final $1 = seq[0];
-            // (vertical_line exclusive_or_expression)*
             final $2 = seq[1];
             final $start = startPos0;
             $$ = _buildBinary($1, $2);
@@ -4503,21 +3529,15 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= exclusive_or_expression (vertical_line exclusive_or_expression)* # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined', identifier, constant, '(', unary_operator
       _failure(_expect0);
     }
-    // <= exclusive_or_expression (vertical_line exclusive_or_expression)* # Choice
     if (_cacheable[4]) {
       _addToCache($$, pos, 4);
     }    
@@ -4525,39 +3545,26 @@ class ExprParser {
   }
   
   dynamic _parse_integer_constant_base() {
-    // MORHEME
-    // integer_constant_base <- decimal_constant integer_suffix? / hexadecimal_constant integer_suffix? / octal_constant integer_suffix?
     var $$;
-    // => decimal_constant integer_suffix? / hexadecimal_constant integer_suffix? / octal_constant integer_suffix? # Choice
     switch (_getState(_transitions32)) {
-      // [0]
       case 0:
         while (true) {
-          // => hexadecimal_constant integer_suffix? # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => hexadecimal_constant
             $$ = _parse_hexadecimal_constant();
-            // <= hexadecimal_constant
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => integer_suffix?
             var testing0 = _testing;
             _testing = _cursor;
-            // => integer_suffix
             $$ = _parse_integer_suffix();
-            // <= integer_suffix
             success = true; 
             _testing = testing0;
-            // <= integer_suffix?
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // hexadecimal_constant
               final $1 = seq[0];
-              // integer_suffix?
               final $2 = seq[1];
               final $start = startPos0;
               $$ = new IntegerLiteral(position: $start, text: _text(), value: $1);
@@ -4569,33 +3576,23 @@ class ExprParser {
             _cursor = pos0;
           }
           _startPos = startPos0;
-          // <= hexadecimal_constant integer_suffix? # Sequence
           if (success) break;
-          // => octal_constant integer_suffix? # Sequence
           var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => octal_constant
             $$ = _parse_octal_constant();
-            // <= octal_constant
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => integer_suffix?
             var testing1 = _testing;
             _testing = _cursor;
-            // => integer_suffix
             $$ = _parse_integer_suffix();
-            // <= integer_suffix
             success = true; 
             _testing = testing1;
-            // <= integer_suffix?
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // octal_constant
               final $1 = seq[0];
-              // integer_suffix?
               final $2 = seq[1];
               final $start = startPos1;
               $$ = new IntegerLiteral(position: $start, text: _text(), value: $1);
@@ -4607,37 +3604,26 @@ class ExprParser {
             _cursor = pos1;
           }
           _startPos = startPos1;
-          // <= octal_constant integer_suffix? # Sequence
           break;
         }
         break;
-      // [1-9]
       case 1:
-        // => decimal_constant integer_suffix? # Sequence
         var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => decimal_constant
           $$ = _parse_decimal_constant();
-          // <= decimal_constant
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => integer_suffix?
           var testing2 = _testing;
           _testing = _cursor;
-          // => integer_suffix
           $$ = _parse_integer_suffix();
-          // <= integer_suffix
           success = true; 
           _testing = testing2;
-          // <= integer_suffix?
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // decimal_constant
             final $1 = seq[0];
-            // integer_suffix?
             final $2 = seq[1];
             final $start = startPos2;
             $$ = new IntegerLiteral(position: $start, text: _text(), value: $1);
@@ -4649,51 +3635,122 @@ class ExprParser {
           _cursor = pos2;
         }
         _startPos = startPos2;
-        // <= decimal_constant integer_suffix? # Sequence
         break;
-      // No matches
-      // EOF
       case 2:
-      case 3:
         $$ = null;
         success = false;
         break;
+      case 3:
+        while (true) {
+          var ch3 = _ch, pos3 = _cursor, startPos3 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            $$ = _parse_decimal_constant();
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            var testing3 = _testing;
+            _testing = _cursor;
+            $$ = _parse_integer_suffix();
+            success = true; 
+            _testing = testing3;
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            if (success) {    
+              final $1 = seq[0];
+              final $2 = seq[1];
+              final $start = startPos3;
+              $$ = new IntegerLiteral(position: $start, text: _text(), value: $1);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch3;
+            _cursor = pos3;
+          }
+          _startPos = startPos3;
+          if (success) break;
+          var ch4 = _ch, pos4 = _cursor, startPos4 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            $$ = _parse_hexadecimal_constant();
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            var testing4 = _testing;
+            _testing = _cursor;
+            $$ = _parse_integer_suffix();
+            success = true; 
+            _testing = testing4;
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            if (success) {    
+              final $1 = seq[0];
+              final $2 = seq[1];
+              final $start = startPos4;
+              $$ = new IntegerLiteral(position: $start, text: _text(), value: $1);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch4;
+            _cursor = pos4;
+          }
+          _startPos = startPos4;
+          if (success) break;
+          var ch5 = _ch, pos5 = _cursor, startPos5 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            $$ = _parse_octal_constant();
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            var testing5 = _testing;
+            _testing = _cursor;
+            $$ = _parse_integer_suffix();
+            success = true; 
+            _testing = testing5;
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            if (success) {    
+              final $1 = seq[0];
+              final $2 = seq[1];
+              final $start = startPos5;
+              $$ = new IntegerLiteral(position: $start, text: _text(), value: $1);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch5;
+            _cursor = pos5;
+          }
+          _startPos = startPos5;
+          break;
+        }
+        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= decimal_constant integer_suffix? / hexadecimal_constant integer_suffix? / octal_constant integer_suffix? # Choice
     return $$;
   }
   
   dynamic _parse_integer_suffix() {
-    // MORHEME
-    // integer_suffix <- unsigned_suffix long_long_suffix / unsigned_suffix long_suffix? / long_long_suffix unsigned_suffix? / long_suffix unsigned_suffix?
     var $$;
-    // => unsigned_suffix long_long_suffix / unsigned_suffix long_suffix? / long_long_suffix unsigned_suffix? / long_suffix unsigned_suffix? # Choice
     switch (_getState(_transitions33)) {
-      // [L] [l]
       case 0:
         while (true) {
-          // => long_long_suffix unsigned_suffix? # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => long_long_suffix
             $$ = _parse_long_long_suffix();
-            // <= long_long_suffix
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => unsigned_suffix?
             var testing0 = _testing;
             _testing = _cursor;
-            // => unsigned_suffix
             $$ = _parse_unsigned_suffix();
-            // <= unsigned_suffix
             success = true; 
             _testing = testing0;
-            // <= unsigned_suffix?
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
@@ -4704,26 +3761,18 @@ class ExprParser {
             _cursor = pos0;
           }
           _startPos = startPos0;
-          // <= long_long_suffix unsigned_suffix? # Sequence
           if (success) break;
-          // => long_suffix unsigned_suffix? # Sequence
           var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => long_suffix
             $$ = _parse_long_suffix();
-            // <= long_suffix
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => unsigned_suffix?
             var testing1 = _testing;
             _testing = _cursor;
-            // => unsigned_suffix
             $$ = _parse_unsigned_suffix();
-            // <= unsigned_suffix
             success = true; 
             _testing = testing1;
-            // <= unsigned_suffix?
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
@@ -4734,25 +3783,18 @@ class ExprParser {
             _cursor = pos1;
           }
           _startPos = startPos1;
-          // <= long_suffix unsigned_suffix? # Sequence
           break;
         }
         break;
-      // [U] [u]
       case 1:
         while (true) {
-          // => unsigned_suffix long_long_suffix # Sequence
           var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => unsigned_suffix
             $$ = _parse_unsigned_suffix();
-            // <= unsigned_suffix
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => long_long_suffix
             $$ = _parse_long_long_suffix();
-            // <= long_long_suffix
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
@@ -4763,26 +3805,18 @@ class ExprParser {
             _cursor = pos2;
           }
           _startPos = startPos2;
-          // <= unsigned_suffix long_long_suffix # Sequence
           if (success) break;
-          // => unsigned_suffix long_suffix? # Sequence
           var ch3 = _ch, pos3 = _cursor, startPos3 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => unsigned_suffix
             $$ = _parse_unsigned_suffix();
-            // <= unsigned_suffix
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => long_suffix?
             var testing2 = _testing;
             _testing = _cursor;
-            // => long_suffix
             $$ = _parse_long_suffix();
-            // <= long_suffix
             success = true; 
             _testing = testing2;
-            // <= long_suffix?
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
@@ -4793,29 +3827,91 @@ class ExprParser {
             _cursor = pos3;
           }
           _startPos = startPos3;
-          // <= unsigned_suffix long_suffix? # Sequence
           break;
         }
         break;
-      // No matches
-      // EOF
       case 2:
-      case 3:
         $$ = null;
         success = false;
         break;
+      case 3:
+        while (true) {
+          var ch4 = _ch, pos4 = _cursor, startPos4 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            $$ = _parse_unsigned_suffix();
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            var testing3 = _testing;
+            _testing = _cursor;
+            $$ = _parse_long_suffix();
+            success = true; 
+            _testing = testing3;
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            break;
+          }
+          if (!success) {
+            _ch = ch4;
+            _cursor = pos4;
+          }
+          _startPos = startPos4;
+          if (success) break;
+          var ch5 = _ch, pos5 = _cursor, startPos5 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            $$ = _parse_long_long_suffix();
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            var testing4 = _testing;
+            _testing = _cursor;
+            $$ = _parse_unsigned_suffix();
+            success = true; 
+            _testing = testing4;
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            break;
+          }
+          if (!success) {
+            _ch = ch5;
+            _cursor = pos5;
+          }
+          _startPos = startPos5;
+          if (success) break;
+          var ch6 = _ch, pos6 = _cursor, startPos6 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            $$ = _parse_long_suffix();
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            var testing5 = _testing;
+            _testing = _cursor;
+            $$ = _parse_unsigned_suffix();
+            success = true; 
+            _testing = testing5;
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            break;
+          }
+          if (!success) {
+            _ch = ch6;
+            _cursor = pos6;
+          }
+          _startPos = startPos6;
+          break;
+        }
+        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= unsigned_suffix long_long_suffix / unsigned_suffix long_suffix? / long_long_suffix unsigned_suffix? / long_suffix unsigned_suffix? # Choice
     return $$;
   }
   
   dynamic _parse_logical_and_expression() {
-    // SENTENCE (NONTERMINAL)
-    // logical_and_expression <- inclusive_or_expression (ampersand2 inclusive_or_expression)*
     var $$;          
     var pos = _cursor;             
     if(_cachePos[3] >= pos) {
@@ -4826,39 +3922,28 @@ class ExprParser {
     } else {
       _cachePos[3] = pos;
     }  
-    // => inclusive_or_expression (ampersand2 inclusive_or_expression)* # Choice
     switch (_getState(_transitions0)) {
-      // [!] [\'-(] [+] [--.] [0-9] [A-Z] [\\] [_] [a-z] [~]
       case 0:
-        // => inclusive_or_expression (ampersand2 inclusive_or_expression)* # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => inclusive_or_expression
           $$ = _parse_inclusive_or_expression();
-          // <= inclusive_or_expression
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => (ampersand2 inclusive_or_expression)*
           var testing0 = _testing; 
           for (var reps = []; ; ) {
             _testing = _cursor;
-            // => (ampersand2 inclusive_or_expression) # Choice
             switch (_ch == 38 ? 0 : _ch == -1 ? 2 : 1) {
-              // [&]
               case 0:
-                // => ampersand2 inclusive_or_expression # Sequence
+              case 2:
                 var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
                 _startPos = _cursor;
                 while (true) {  
-                  // => ampersand2
                   $$ = _parse_ampersand2();
-                  // <= ampersand2
                   if (!success) break;
                   var seq = new List(2)..[0] = $$;
-                  // => inclusive_or_expression
                   $$ = _parse_inclusive_or_expression();
-                  // <= inclusive_or_expression
                   if (!success) break;
                   seq[1] = $$;
                   $$ = seq;
@@ -4869,21 +3954,15 @@ class ExprParser {
                   _cursor = pos1;
                 }
                 _startPos = startPos1;
-                // <= ampersand2 inclusive_or_expression # Sequence
                 break;
-              // No matches
-              // EOF
               case 1:
-              case 2:
                 $$ = null;
                 success = false;
                 break;
             }
             if (!success && _cursor > _testing) {
-              // Expected: '&&'
               _failure(_expect2);
             }
-            // <= (ampersand2 inclusive_or_expression) # Choice
             if (success) {  
               reps.add($$);
             } else {
@@ -4893,14 +3972,11 @@ class ExprParser {
               break; 
             }
           }
-          // <= (ampersand2 inclusive_or_expression)*
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // inclusive_or_expression
             final $1 = seq[0];
-            // (ampersand2 inclusive_or_expression)*
             final $2 = seq[1];
             final $start = startPos0;
             $$ = _buildBinary($1, $2);
@@ -4912,21 +3988,15 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= inclusive_or_expression (ampersand2 inclusive_or_expression)* # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined', identifier, constant, '(', unary_operator
       _failure(_expect0);
     }
-    // <= inclusive_or_expression (ampersand2 inclusive_or_expression)* # Choice
     if (_cacheable[3]) {
       _addToCache($$, pos, 3);
     }    
@@ -4934,8 +4004,6 @@ class ExprParser {
   }
   
   dynamic _parse_logical_or_expression() {
-    // SENTENCE (NONTERMINAL)
-    // logical_or_expression <- logical_and_expression (vertical_line2 logical_and_expression)*
     var $$;          
     var pos = _cursor;             
     if(_cachePos[2] >= pos) {
@@ -4946,39 +4014,28 @@ class ExprParser {
     } else {
       _cachePos[2] = pos;
     }  
-    // => logical_and_expression (vertical_line2 logical_and_expression)* # Choice
     switch (_getState(_transitions0)) {
-      // [!] [\'-(] [+] [--.] [0-9] [A-Z] [\\] [_] [a-z] [~]
       case 0:
-        // => logical_and_expression (vertical_line2 logical_and_expression)* # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => logical_and_expression
           $$ = _parse_logical_and_expression();
-          // <= logical_and_expression
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => (vertical_line2 logical_and_expression)*
           var testing0 = _testing; 
           for (var reps = []; ; ) {
             _testing = _cursor;
-            // => (vertical_line2 logical_and_expression) # Choice
             switch (_ch == 124 ? 0 : _ch == -1 ? 2 : 1) {
-              // [|]
               case 0:
-                // => vertical_line2 logical_and_expression # Sequence
+              case 2:
                 var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
                 _startPos = _cursor;
                 while (true) {  
-                  // => vertical_line2
                   $$ = _parse_vertical_line2();
-                  // <= vertical_line2
                   if (!success) break;
                   var seq = new List(2)..[0] = $$;
-                  // => logical_and_expression
                   $$ = _parse_logical_and_expression();
-                  // <= logical_and_expression
                   if (!success) break;
                   seq[1] = $$;
                   $$ = seq;
@@ -4989,21 +4046,15 @@ class ExprParser {
                   _cursor = pos1;
                 }
                 _startPos = startPos1;
-                // <= vertical_line2 logical_and_expression # Sequence
                 break;
-              // No matches
-              // EOF
               case 1:
-              case 2:
                 $$ = null;
                 success = false;
                 break;
             }
             if (!success && _cursor > _testing) {
-              // Expected: '||'
               _failure(_expect1);
             }
-            // <= (vertical_line2 logical_and_expression) # Choice
             if (success) {  
               reps.add($$);
             } else {
@@ -5013,14 +4064,11 @@ class ExprParser {
               break; 
             }
           }
-          // <= (vertical_line2 logical_and_expression)*
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // logical_and_expression
             final $1 = seq[0];
-            // (vertical_line2 logical_and_expression)*
             final $2 = seq[1];
             final $start = startPos0;
             $$ = _buildBinary($1, $2);
@@ -5032,21 +4080,15 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= logical_and_expression (vertical_line2 logical_and_expression)* # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined', identifier, constant, '(', unary_operator
       _failure(_expect0);
     }
-    // <= logical_and_expression (vertical_line2 logical_and_expression)* # Choice
     if (_cacheable[2]) {
       _addToCache($$, pos, 2);
     }    
@@ -5054,31 +4096,20 @@ class ExprParser {
   }
   
   dynamic _parse_long_long_suffix() {
-    // MORHEME
-    // long_long_suffix <- 'll' / 'LL'
     var $$;
-    // => 'll' / 'LL' # Choice
     switch (_getState(_transitions34)) {
-      // [L]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => 'LL'
         $$ = _matchString(_strings10, 'LL');
-        // <= 'LL'
         _startPos = startPos0;
         break;
-      // [l]
       case 1:
         var startPos1 = _startPos;
         _startPos = _cursor;
-        // => 'll'
         $$ = _matchString(_strings11, 'll');
-        // <= 'll'
         _startPos = startPos1;
         break;
-      // No matches
-      // EOF
       case 2:
       case 3:
         $$ = null;
@@ -5086,30 +4117,20 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: ll, LL
       _failure(_expect33);
     }
-    // <= 'll' / 'LL' # Choice
     return $$;
   }
   
   dynamic _parse_long_suffix() {
-    // MORHEME
-    // long_suffix <- [Ll]
     var $$;
-    // => [Ll] # Choice
     switch (_getState(_transitions35)) {
-      // [L] [l]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => [Ll]
         $$ = _matchMapping(76, 108, _mapping4);
-        // <= [Ll]
         _startPos = startPos0;
         break;
-      // No matches
-      // EOF
       case 1:
       case 2:
         $$ = null;
@@ -5117,16 +4138,12 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= [Ll] # Choice
     return $$;
   }
   
   dynamic _parse_lparen() {
-    // LEXEME (TOKEN)
-    // lparen <- '(' spaces
     var $$;          
     var pos = _cursor;             
     if(_cachePos[25] >= pos) {
@@ -5139,35 +4156,21 @@ class ExprParser {
     }  
     _token = 8;    
     _tokenStart = _cursor;    
-    // => '(' spaces # Choice
     switch (_ch == 40 ? 0 : _ch == -1 ? 2 : 1) {
-      // [(]
       case 0:
-        // => '(' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '('
-          $$ = '(';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= '('
+          $$ = _matchChar(40, '(');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '('
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -5179,21 +4182,15 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '(' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: '('
       _failure(_expect17);
     }
-    // <= '(' spaces # Choice
     if (_cacheable[25]) {
       _addToCache($$, pos, 25);
     }    
@@ -5203,32 +4200,22 @@ class ExprParser {
   }
   
   dynamic _parse_lsh() {
-    // MORHEME
-    // lsh <- '<<' spaces
     var $$;
-    // => '<<' spaces # Choice
     switch (_ch == 60 ? 0 : _ch == -1 ? 2 : 1) {
-      // [<]
       case 0:
-        // => '<<' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '<<'
           $$ = _matchString(_strings12, '<<');
-          // <= '<<'
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '<<'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -5240,57 +4227,35 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '<<' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: <<
       _failure(_expect34);
     }
-    // <= '<<' spaces # Choice
     return $$;
   }
   
   dynamic _parse_lt() {
-    // MORHEME
-    // lt <- '<' spaces
     var $$;
-    // => '<' spaces # Choice
     switch (_ch == 60 ? 0 : _ch == -1 ? 2 : 1) {
-      // [<]
       case 0:
-        // => '<' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '<'
-          $$ = '<';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= '<'
+          $$ = _matchChar(60, '<');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '<'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -5302,51 +4267,35 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '<' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: <
       _failure(_expect35);
     }
-    // <= '<' spaces # Choice
     return $$;
   }
   
   dynamic _parse_lte() {
-    // MORHEME
-    // lte <- '<=' spaces
     var $$;
-    // => '<=' spaces # Choice
     switch (_ch == 60 ? 0 : _ch == -1 ? 2 : 1) {
-      // [<]
       case 0:
-        // => '<=' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '<='
           $$ = _matchString(_strings13, '<=');
-          // <= '<='
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '<='
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -5358,57 +4307,35 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '<=' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: <=
       _failure(_expect36);
     }
-    // <= '<=' spaces # Choice
     return $$;
   }
   
   dynamic _parse_minus() {
-    // MORHEME
-    // minus <- '-' spaces
     var $$;
-    // => '-' spaces # Choice
     switch (_ch == 45 ? 0 : _ch == -1 ? 2 : 1) {
-      // [-]
       case 0:
-        // => '-' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '-'
-          $$ = '-';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= '-'
+          $$ = _matchChar(45, '-');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '-'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -5420,27 +4347,19 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '-' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: -
       _failure(_expect37);
     }
-    // <= '-' spaces # Choice
     return $$;
   }
   
   dynamic _parse_multiplicative_expression() {
-    // SENTENCE (NONTERMINAL)
-    // multiplicative_expression <- unary_expression (multiplicative_operator unary_expression)*
     var $$;          
     var pos = _cursor;             
     if(_cachePos[11] >= pos) {
@@ -5451,39 +4370,28 @@ class ExprParser {
     } else {
       _cachePos[11] = pos;
     }  
-    // => unary_expression (multiplicative_operator unary_expression)* # Choice
     switch (_getState(_transitions0)) {
-      // [!] [\'-(] [+] [--.] [0-9] [A-Z] [\\] [_] [a-z] [~]
       case 0:
-        // => unary_expression (multiplicative_operator unary_expression)* # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => unary_expression
           $$ = _parse_unary_expression();
-          // <= unary_expression
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => (multiplicative_operator unary_expression)*
           var testing0 = _testing; 
           for (var reps = []; ; ) {
             _testing = _cursor;
-            // => (multiplicative_operator unary_expression) # Choice
             switch (_getState(_transitions4)) {
-              // [%] [*] [/]
               case 0:
-                // => multiplicative_operator unary_expression # Sequence
+              case 2:
                 var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
                 _startPos = _cursor;
                 while (true) {  
-                  // => multiplicative_operator
                   $$ = _parse_multiplicative_operator();
-                  // <= multiplicative_operator
                   if (!success) break;
                   var seq = new List(2)..[0] = $$;
-                  // => unary_expression
                   $$ = _parse_unary_expression();
-                  // <= unary_expression
                   if (!success) break;
                   seq[1] = $$;
                   $$ = seq;
@@ -5494,21 +4402,15 @@ class ExprParser {
                   _cursor = pos1;
                 }
                 _startPos = startPos1;
-                // <= multiplicative_operator unary_expression # Sequence
                 break;
-              // No matches
-              // EOF
               case 1:
-              case 2:
                 $$ = null;
                 success = false;
                 break;
             }
             if (!success && _cursor > _testing) {
-              // Expected: multiplicative_operator
               _failure(_expect10);
             }
-            // <= (multiplicative_operator unary_expression) # Choice
             if (success) {  
               reps.add($$);
             } else {
@@ -5518,14 +4420,11 @@ class ExprParser {
               break; 
             }
           }
-          // <= (multiplicative_operator unary_expression)*
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // unary_expression
             final $1 = seq[0];
-            // (multiplicative_operator unary_expression)*
             final $2 = seq[1];
             final $start = startPos0;
             $$ = _buildBinary($1, $2);
@@ -5537,21 +4436,15 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= unary_expression (multiplicative_operator unary_expression)* # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined', identifier, constant, '(', unary_operator
       _failure(_expect0);
     }
-    // <= unary_expression (multiplicative_operator unary_expression)* # Choice
     if (_cacheable[11]) {
       _addToCache($$, pos, 11);
     }    
@@ -5559,85 +4452,77 @@ class ExprParser {
   }
   
   dynamic _parse_multiplicative_operator() {
-    // LEXEME (TOKEN)
-    // multiplicative_operator <- asterisk / slash / percent
     var $$;
     _token = 9;  
     _tokenStart = _cursor;  
-    // => asterisk / slash / percent # Choice
     switch (_getState(_transitions12)) {
-      // [%]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => percent
         $$ = _parse_percent();
-        // <= percent
         _startPos = startPos0;
         break;
-      // [*]
       case 1:
         var startPos1 = _startPos;
         _startPos = _cursor;
-        // => asterisk
         $$ = _parse_asterisk();
-        // <= asterisk
         _startPos = startPos1;
         break;
-      // [/]
       case 2:
         var startPos2 = _startPos;
         _startPos = _cursor;
-        // => slash
         $$ = _parse_slash();
-        // <= slash
         _startPos = startPos2;
         break;
-      // No matches
-      // EOF
       case 3:
-      case 4:
         $$ = null;
         success = false;
         break;
+      case 4:
+        while (true) {
+          var startPos3 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_asterisk();
+          _startPos = startPos3;
+          if (success) break;
+          var startPos4 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_slash();
+          _startPos = startPos4;
+          if (success) break;
+          var startPos5 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_percent();
+          _startPos = startPos5;
+          break;
+        }
+        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: multiplicative_operator
       _failure(_expect10);
     }
-    // <= asterisk / slash / percent # Choice
     _token = null;
     _tokenStart = null;
     return $$;
   }
   
   dynamic _parse_neq() {
-    // MORHEME
-    // neq <- '!=' spaces
     var $$;
-    // => '!=' spaces # Choice
     switch (_ch == 33 ? 0 : _ch == -1 ? 2 : 1) {
-      // [!]
       case 0:
-        // => '!=' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '!='
           $$ = _matchString(_strings14, '!=');
-          // <= '!='
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '!='
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -5649,62 +4534,43 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '!=' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: !=
       _failure(_expect38);
     }
-    // <= '!=' spaces # Choice
     return $$;
   }
   
   dynamic _parse_new_line() {
-    // LEXEME (TOKEN)
-    // new_line <- '\r\n' / [\n\r]
     var $$;
     _token = 10;  
     _tokenStart = _cursor;  
-    // => '\r\n' / [\n\r] # Choice
     switch (_getState(_transitions13)) {
-      // [\n]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => [\n\r]
         $$ = _matchMapping(10, 13, _mapping0);
-        // <= [\n\r]
         _startPos = startPos0;
         break;
-      // [\r]
       case 1:
         while (true) {
           var startPos1 = _startPos;
           _startPos = _cursor;
-          // => '\r\n'
           $$ = _matchString(_strings2, '\r\n');
-          // <= '\r\n'
           _startPos = startPos1;
           if (success) break;
           var startPos2 = _startPos;
           _startPos = _cursor;
-          // => [\n\r]
           $$ = _matchMapping(10, 13, _mapping0);
-          // <= [\n\r]
           _startPos = startPos2;
           break;
         }
         break;
-      // No matches
-      // EOF
       case 2:
       case 3:
         $$ = null;
@@ -5712,32 +4578,22 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: new_line
       _failure(_expect18);
     }
-    // <= '\r\n' / [\n\r] # Choice
     _token = null;
     _tokenStart = null;
     return $$;
   }
   
   dynamic _parse_nondigit() {
-    // MORHEME
-    // nondigit <- [A-Z_a-z]
     var $$;
-    // => [A-Z_a-z] # Choice
     switch (_getState(_transitions36)) {
-      // [A-Z] [_] [a-z]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => [A-Z_a-z]
         $$ = _matchMapping(65, 122, _mapping5);
-        // <= [A-Z_a-z]
         _startPos = startPos0;
         break;
-      // No matches
-      // EOF
       case 1:
       case 2:
         $$ = null;
@@ -5745,30 +4601,20 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= [A-Z_a-z] # Choice
     return $$;
   }
   
   dynamic _parse_nonzero_digit() {
-    // MORHEME
-    // nonzero_digit <- [1-9]
     var $$;
-    // => [1-9] # Choice
     switch (_ch >= 49 && _ch <= 57 ? 0 : _ch == -1 ? 2 : 1) {
-      // [1-9]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => [1-9]
         $$ = _matchRange(49, 57);
-        // <= [1-9]
         _startPos = startPos0;
         break;
-      // No matches
-      // EOF
       case 1:
       case 2:
         $$ = null;
@@ -5776,46 +4622,28 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= [1-9] # Choice
     return $$;
   }
   
   dynamic _parse_octal_constant() {
-    // MORHEME
-    // octal_constant <- '0' octal_constant1
     var $$;
-    // => '0' octal_constant1 # Choice
     switch (_ch == 48 ? 0 : _ch == -1 ? 2 : 1) {
-      // [0]
       case 0:
-        // => '0' octal_constant1 # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '0'
-          $$ = '0';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= '0'
+          $$ = _matchChar(48, '0');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => octal_constant1
           $$ = _parse_octal_constant1();
-          // <= octal_constant1
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '0'
             final $1 = seq[0];
-            // octal_constant1
             final $2 = seq[1];
             final $start = startPos0;
             $$ = int.parse(_text(), radix: 8);
@@ -5827,57 +4655,38 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '0' octal_constant1 # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 0
       _failure(_expect39);
     }
-    // <= '0' octal_constant1 # Choice
     return $$;
   }
   
   dynamic _parse_octal_constant1() {
-    // MORHEME
-    // octal_constant1 <- octal_digit octal_constant1 / ''
     var $$;
-    // => octal_digit octal_constant1 / '' # Choice
     switch (_getState(_transitions37)) {
-      // [\u0000-/] [8-\u0010ffff]
-      // EOF
       case 0:
-      case 3:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => ''
         success = true;
         $$ = '';
-        // <= ''
         _startPos = startPos0;
         break;
-      // [0-7]
       case 1:
+      case 3:
         while (true) {
-          // => octal_digit octal_constant1 # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => octal_digit
             $$ = _parse_octal_digit();
-            // <= octal_digit
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => octal_constant1
             $$ = _parse_octal_constant1();
-            // <= octal_constant1
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
@@ -5888,49 +4697,35 @@ class ExprParser {
             _cursor = pos0;
           }
           _startPos = startPos1;
-          // <= octal_digit octal_constant1 # Sequence
           if (success) break;
           var startPos2 = _startPos;
           _startPos = _cursor;
-          // => ''
           success = true;
           $$ = '';
-          // <= ''
           _startPos = startPos2;
           break;
         }
         break;
-      // No matches
       case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= octal_digit octal_constant1 / '' # Choice
     return $$;
   }
   
   dynamic _parse_octal_digit() {
-    // MORHEME
-    // octal_digit <- [0-7]
     var $$;
-    // => [0-7] # Choice
     switch (_ch >= 48 && _ch <= 55 ? 0 : _ch == -1 ? 2 : 1) {
-      // [0-7]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => [0-7]
         $$ = _matchRange(48, 55);
-        // <= [0-7]
         _startPos = startPos0;
         break;
-      // No matches
-      // EOF
       case 1:
       case 2:
         $$ = null;
@@ -5938,61 +4733,36 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= [0-7] # Choice
     return $$;
   }
   
   dynamic _parse_octal_escape_sequence() {
-    // MORHEME
-    // octal_escape_sequence <- '\\' octal_digit octal_digit octal_digit / '\\' octal_digit octal_digit / '\\' octal_digit
     var $$;
-    // => '\\' octal_digit octal_digit octal_digit / '\\' octal_digit octal_digit / '\\' octal_digit # Choice
     switch (_ch == 92 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\\]
       case 0:
         while (true) {
-          // => '\\' octal_digit octal_digit octal_digit # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => '\\'
-            $$ = '\\';
-            success = true;
-            if (++_cursor < _inputLen) {
-              _ch = _input[_cursor];
-            } else {
-              _ch = -1;
-            }
-            // <= '\\'
+            $$ = _matchChar(92, '\\');
             if (!success) break;
             var seq = new List(4)..[0] = $$;
-            // => octal_digit
             $$ = _parse_octal_digit();
-            // <= octal_digit
             if (!success) break;
             seq[1] = $$;
-            // => octal_digit
             $$ = _parse_octal_digit();
-            // <= octal_digit
             if (!success) break;
             seq[2] = $$;
-            // => octal_digit
             $$ = _parse_octal_digit();
-            // <= octal_digit
             if (!success) break;
             seq[3] = $$;
             $$ = seq;
             if (success) {    
-              // '\\'
               final $1 = seq[0];
-              // octal_digit
               final $2 = seq[1];
-              // octal_digit
               final $3 = seq[2];
-              // octal_digit
               final $4 = seq[3];
               final $start = startPos0;
               $$ = int.parse(_text(1), radix: 8);
@@ -6004,34 +4774,23 @@ class ExprParser {
             _cursor = pos0;
           }
           _startPos = startPos0;
-          // <= '\\' octal_digit octal_digit octal_digit # Sequence
           if (success) break;
-          // => '\\' octal_digit octal_digit # Sequence
           var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => '\\'
             $$ = _matchChar(92, '\\');
-            // <= '\\'
             if (!success) break;
             var seq = new List(3)..[0] = $$;
-            // => octal_digit
             $$ = _parse_octal_digit();
-            // <= octal_digit
             if (!success) break;
             seq[1] = $$;
-            // => octal_digit
             $$ = _parse_octal_digit();
-            // <= octal_digit
             if (!success) break;
             seq[2] = $$;
             $$ = seq;
             if (success) {    
-              // '\\'
               final $1 = seq[0];
-              // octal_digit
               final $2 = seq[1];
-              // octal_digit
               final $3 = seq[2];
               final $start = startPos1;
               $$ = int.parse(_text(1), radix: 8);
@@ -6043,27 +4802,19 @@ class ExprParser {
             _cursor = pos1;
           }
           _startPos = startPos1;
-          // <= '\\' octal_digit octal_digit # Sequence
           if (success) break;
-          // => '\\' octal_digit # Sequence
           var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => '\\'
             $$ = _matchChar(92, '\\');
-            // <= '\\'
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => octal_digit
             $$ = _parse_octal_digit();
-            // <= octal_digit
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // '\\'
               final $1 = seq[0];
-              // octal_digit
               final $2 = seq[1];
               final $start = startPos2;
               $$ = int.parse($2, radix: 8);
@@ -6075,12 +4826,9 @@ class ExprParser {
             _cursor = pos2;
           }
           _startPos = startPos2;
-          // <= '\\' octal_digit # Sequence
           break;
         }
         break;
-      // No matches
-      // EOF
       case 1:
       case 2:
         $$ = null;
@@ -6088,46 +4836,28 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: \
       _failure(_expect40);
     }
-    // <= '\\' octal_digit octal_digit octal_digit / '\\' octal_digit octal_digit / '\\' octal_digit # Choice
     return $$;
   }
   
   dynamic _parse_percent() {
-    // MORHEME
-    // percent <- '%' spaces
     var $$;
-    // => '%' spaces # Choice
     switch (_ch == 37 ? 0 : _ch == -1 ? 2 : 1) {
-      // [%]
       case 0:
-        // => '%' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '%'
-          $$ = '%';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= '%'
+          $$ = _matchChar(37, '%');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '%'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -6139,57 +4869,35 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '%' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: %
       _failure(_expect41);
     }
-    // <= '%' spaces # Choice
     return $$;
   }
   
   dynamic _parse_plus() {
-    // MORHEME
-    // plus <- '+' spaces
     var $$;
-    // => '+' spaces # Choice
     switch (_ch == 43 ? 0 : _ch == -1 ? 2 : 1) {
-      // [+]
       case 0:
-        // => '+' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '+'
-          $$ = '+';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= '+'
+          $$ = _matchChar(43, '+');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '+'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -6201,67 +4909,44 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '+' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: +
       _failure(_expect42);
     }
-    // <= '+' spaces # Choice
     return $$;
   }
   
   dynamic _parse_primary_expression() {
-    // SENTENCE (NONTERMINAL)
-    // primary_expression <- defined / identifier / constant / lparen expression rparen
     var $$;
-    // => defined / identifier / constant / lparen expression rparen # Choice
     switch (_getState(_transitions6)) {
-      // [\'] [.] [0-9]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => constant
         $$ = _parse_constant();
-        // <= constant
         _startPos = startPos0;
         break;
-      // [(]
       case 1:
-        // => lparen expression rparen # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos1 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => lparen
           $$ = _parse_lparen();
-          // <= lparen
           if (!success) break;
           var seq = new List(3)..[0] = $$;
-          // => expression
           $$ = _parse_expression();
-          // <= expression
           if (!success) break;
           seq[1] = $$;
-          // => rparen
           $$ = _parse_rparen();
-          // <= rparen
           if (!success) break;
           seq[2] = $$;
           $$ = seq;
           if (success) {    
-            // lparen
             final $1 = seq[0];
-            // expression
             final $2 = seq[1];
-            // rparen
             final $3 = seq[2];
             final $start = startPos1;
             $$ = new ParenthesisExpression(expression: $2, position: $start);
@@ -6273,106 +4958,118 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos1;
-        // <= lparen expression rparen # Sequence
         break;
-      // [A-Z]
       case 2:
         while (true) {
           var startPos2 = _startPos;
           _startPos = _cursor;
-          // => identifier
           $$ = _parse_identifier();
-          // <= identifier
           _startPos = startPos2;
           if (success) break;
           var startPos3 = _startPos;
           _startPos = _cursor;
-          // => constant
           $$ = _parse_constant();
-          // <= constant
           _startPos = startPos3;
           break;
         }
         break;
-      // [\\] [_] [a-c] [e-z]
       case 3:
         var startPos4 = _startPos;
         _startPos = _cursor;
-        // => identifier
         $$ = _parse_identifier();
-        // <= identifier
         _startPos = startPos4;
         break;
-      // [d]
       case 4:
         while (true) {
           var startPos5 = _startPos;
           _startPos = _cursor;
-          // => defined
           $$ = _parse_defined();
-          // <= defined
           _startPos = startPos5;
           if (success) break;
           var startPos6 = _startPos;
           _startPos = _cursor;
-          // => identifier
           $$ = _parse_identifier();
-          // <= identifier
           _startPos = startPos6;
           break;
         }
         break;
-      // No matches
-      // EOF
       case 5:
-      case 6:
         $$ = null;
         success = false;
         break;
+      case 6:
+        while (true) {
+          var startPos7 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_defined();
+          _startPos = startPos7;
+          if (success) break;
+          var startPos8 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_identifier();
+          _startPos = startPos8;
+          if (success) break;
+          var startPos9 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_constant();
+          _startPos = startPos9;
+          if (success) break;
+          var ch1 = _ch, pos1 = _cursor, startPos10 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            $$ = _parse_lparen();
+            if (!success) break;
+            var seq = new List(3)..[0] = $$;
+            $$ = _parse_expression();
+            if (!success) break;
+            seq[1] = $$;
+            $$ = _parse_rparen();
+            if (!success) break;
+            seq[2] = $$;
+            $$ = seq;
+            if (success) {    
+              final $1 = seq[0];
+              final $2 = seq[1];
+              final $3 = seq[2];
+              final $start = startPos10;
+              $$ = new ParenthesisExpression(expression: $2, position: $start);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch1;
+            _cursor = pos1;
+          }
+          _startPos = startPos10;
+          break;
+        }
+        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined', identifier, constant, '('
       _failure(_expect11);
     }
-    // <= defined / identifier / constant / lparen expression rparen # Choice
     return $$;
   }
   
   dynamic _parse_question_mark() {
-    // LEXEME (TOKEN)
-    // question_mark <- '?' spaces
     var $$;
     _token = 11;  
     _tokenStart = _cursor;  
-    // => '?' spaces # Choice
     switch (_ch == 63 ? 0 : _ch == -1 ? 2 : 1) {
-      // [?]
       case 0:
-        // => '?' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '?'
-          $$ = '?';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= '?'
+          $$ = _matchChar(63, '?');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '?'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -6384,29 +5081,21 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '?' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: '?'
       _failure(_expect19);
     }
-    // <= '?' spaces # Choice
     _token = null;
     _tokenStart = null;
     return $$;
   }
   
   dynamic _parse_relational_expression() {
-    // SENTENCE (NONTERMINAL)
-    // relational_expression <- shift_expression (relational_operator shift_expression)*
     var $$;          
     var pos = _cursor;             
     if(_cachePos[8] >= pos) {
@@ -6417,39 +5106,28 @@ class ExprParser {
     } else {
       _cachePos[8] = pos;
     }  
-    // => shift_expression (relational_operator shift_expression)* # Choice
     switch (_getState(_transitions0)) {
-      // [!] [\'-(] [+] [--.] [0-9] [A-Z] [\\] [_] [a-z] [~]
       case 0:
-        // => shift_expression (relational_operator shift_expression)* # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => shift_expression
           $$ = _parse_shift_expression();
-          // <= shift_expression
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => (relational_operator shift_expression)*
           var testing0 = _testing; 
           for (var reps = []; ; ) {
             _testing = _cursor;
-            // => (relational_operator shift_expression) # Choice
             switch (_getState(_transitions2)) {
-              // [<] [>]
               case 0:
-                // => relational_operator shift_expression # Sequence
+              case 2:
                 var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
                 _startPos = _cursor;
                 while (true) {  
-                  // => relational_operator
                   $$ = _parse_relational_operator();
-                  // <= relational_operator
                   if (!success) break;
                   var seq = new List(2)..[0] = $$;
-                  // => shift_expression
                   $$ = _parse_shift_expression();
-                  // <= shift_expression
                   if (!success) break;
                   seq[1] = $$;
                   $$ = seq;
@@ -6460,21 +5138,15 @@ class ExprParser {
                   _cursor = pos1;
                 }
                 _startPos = startPos1;
-                // <= relational_operator shift_expression # Sequence
                 break;
-              // No matches
-              // EOF
               case 1:
-              case 2:
                 $$ = null;
                 success = false;
                 break;
             }
             if (!success && _cursor > _testing) {
-              // Expected: relational_operator
               _failure(_expect7);
             }
-            // <= (relational_operator shift_expression) # Choice
             if (success) {  
               reps.add($$);
             } else {
@@ -6484,14 +5156,11 @@ class ExprParser {
               break; 
             }
           }
-          // <= (relational_operator shift_expression)*
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // shift_expression
             final $1 = seq[0];
-            // (relational_operator shift_expression)*
             final $2 = seq[1];
             final $start = startPos0;
             $$ = _buildBinary($1, $2);
@@ -6503,21 +5172,15 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= shift_expression (relational_operator shift_expression)* # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined', identifier, constant, '(', unary_operator
       _failure(_expect0);
     }
-    // <= shift_expression (relational_operator shift_expression)* # Choice
     if (_cacheable[8]) {
       _addToCache($$, pos, 8);
     }    
@@ -6525,72 +5188,76 @@ class ExprParser {
   }
   
   dynamic _parse_relational_operator() {
-    // LEXEME (TOKEN)
-    // relational_operator <- lt / gt / lte / gte
     var $$;
     _token = 12;  
     _tokenStart = _cursor;  
-    // => lt / gt / lte / gte # Choice
     switch (_getState(_transitions14)) {
-      // [<]
       case 0:
         while (true) {
           var startPos0 = _startPos;
           _startPos = _cursor;
-          // => lt
           $$ = _parse_lt();
-          // <= lt
           _startPos = startPos0;
           if (success) break;
           var startPos1 = _startPos;
           _startPos = _cursor;
-          // => lte
           $$ = _parse_lte();
-          // <= lte
           _startPos = startPos1;
           break;
         }
         break;
-      // [>]
       case 1:
         while (true) {
           var startPos2 = _startPos;
           _startPos = _cursor;
-          // => gt
           $$ = _parse_gt();
-          // <= gt
           _startPos = startPos2;
           if (success) break;
           var startPos3 = _startPos;
           _startPos = _cursor;
-          // => gte
           $$ = _parse_gte();
-          // <= gte
           _startPos = startPos3;
           break;
         }
         break;
-      // No matches
-      // EOF
       case 2:
-      case 3:
         $$ = null;
         success = false;
         break;
+      case 3:
+        while (true) {
+          var startPos4 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_lt();
+          _startPos = startPos4;
+          if (success) break;
+          var startPos5 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_gt();
+          _startPos = startPos5;
+          if (success) break;
+          var startPos6 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_lte();
+          _startPos = startPos6;
+          if (success) break;
+          var startPos7 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_gte();
+          _startPos = startPos7;
+          break;
+        }
+        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: relational_operator
       _failure(_expect7);
     }
-    // <= lt / gt / lte / gte # Choice
     _token = null;
     _tokenStart = null;
     return $$;
   }
   
   dynamic _parse_rparen() {
-    // LEXEME (TOKEN)
-    // rparen <- ')' spaces
     var $$;          
     var pos = _cursor;             
     if(_cachePos[30] >= pos) {
@@ -6603,35 +5270,21 @@ class ExprParser {
     }  
     _token = 13;    
     _tokenStart = _cursor;    
-    // => ')' spaces # Choice
     switch (_ch == 41 ? 0 : _ch == -1 ? 2 : 1) {
-      // [)]
       case 0:
-        // => ')' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => ')'
-          $$ = ')';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= ')'
+          $$ = _matchChar(41, ')');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // ')'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -6643,21 +5296,15 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= ')' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: ')'
       _failure(_expect20);
     }
-    // <= ')' spaces # Choice
     if (_cacheable[30]) {
       _addToCache($$, pos, 30);
     }    
@@ -6667,32 +5314,22 @@ class ExprParser {
   }
   
   dynamic _parse_rsh() {
-    // MORHEME
-    // rsh <- '<<' spaces
     var $$;
-    // => '<<' spaces # Choice
     switch (_ch == 60 ? 0 : _ch == -1 ? 2 : 1) {
-      // [<]
       case 0:
-        // => '<<' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '<<'
           $$ = _matchString(_strings12, '<<');
-          // <= '<<'
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '<<'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -6704,59 +5341,37 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '<<' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: <<
       _failure(_expect34);
     }
-    // <= '<<' spaces # Choice
     return $$;
   }
   
   dynamic _parse_semicolon() {
-    // LEXEME (TOKEN)
-    // semicolon <- ':' spaces
     var $$;
     _token = 14;  
     _tokenStart = _cursor;  
-    // => ':' spaces # Choice
     switch (_ch == 58 ? 0 : _ch == -1 ? 2 : 1) {
-      // [:]
       case 0:
-        // => ':' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => ':'
-          $$ = ':';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= ':'
+          $$ = _matchChar(58, ':');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // ':'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -6768,29 +5383,21 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= ':' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: ':'
       _failure(_expect21);
     }
-    // <= ':' spaces # Choice
     _token = null;
     _tokenStart = null;
     return $$;
   }
   
   dynamic _parse_shift_expression() {
-    // SENTENCE (NONTERMINAL)
-    // shift_expression <- additive_expression (shift_operator additive_expression)*
     var $$;          
     var pos = _cursor;             
     if(_cachePos[9] >= pos) {
@@ -6801,39 +5408,28 @@ class ExprParser {
     } else {
       _cachePos[9] = pos;
     }  
-    // => additive_expression (shift_operator additive_expression)* # Choice
     switch (_getState(_transitions0)) {
-      // [!] [\'-(] [+] [--.] [0-9] [A-Z] [\\] [_] [a-z] [~]
       case 0:
-        // => additive_expression (shift_operator additive_expression)* # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => additive_expression
           $$ = _parse_additive_expression();
-          // <= additive_expression
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => (shift_operator additive_expression)*
           var testing0 = _testing; 
           for (var reps = []; ; ) {
             _testing = _cursor;
-            // => (shift_operator additive_expression) # Choice
             switch (_ch == 60 ? 0 : _ch == -1 ? 2 : 1) {
-              // [<]
               case 0:
-                // => shift_operator additive_expression # Sequence
+              case 2:
                 var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
                 _startPos = _cursor;
                 while (true) {  
-                  // => shift_operator
                   $$ = _parse_shift_operator();
-                  // <= shift_operator
                   if (!success) break;
                   var seq = new List(2)..[0] = $$;
-                  // => additive_expression
                   $$ = _parse_additive_expression();
-                  // <= additive_expression
                   if (!success) break;
                   seq[1] = $$;
                   $$ = seq;
@@ -6844,21 +5440,15 @@ class ExprParser {
                   _cursor = pos1;
                 }
                 _startPos = startPos1;
-                // <= shift_operator additive_expression # Sequence
                 break;
-              // No matches
-              // EOF
               case 1:
-              case 2:
                 $$ = null;
                 success = false;
                 break;
             }
             if (!success && _cursor > _testing) {
-              // Expected: '<<'
               _failure(_expect8);
             }
-            // <= (shift_operator additive_expression) # Choice
             if (success) {  
               reps.add($$);
             } else {
@@ -6868,14 +5458,11 @@ class ExprParser {
               break; 
             }
           }
-          // <= (shift_operator additive_expression)*
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // additive_expression
             final $1 = seq[0];
-            // (shift_operator additive_expression)*
             final $2 = seq[1];
             final $start = startPos0;
             $$ = _buildBinary($1, $2);
@@ -6887,21 +5474,15 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= additive_expression (shift_operator additive_expression)* # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined', identifier, constant, '(', unary_operator
       _failure(_expect0);
     }
-    // <= additive_expression (shift_operator additive_expression)* # Choice
     if (_cacheable[9]) {
       _addToCache($$, pos, 9);
     }    
@@ -6909,67 +5490,47 @@ class ExprParser {
   }
   
   dynamic _parse_shift_operator() {
-    // LEXEME (TOKEN)
-    // shift_operator <- lsh / rsh
     var $$;
     _token = 15;  
     _tokenStart = _cursor;  
-    // => lsh / rsh # Choice
     switch (_ch == 60 ? 0 : _ch == -1 ? 2 : 1) {
-      // [<]
       case 0:
+      case 2:
         while (true) {
           var startPos0 = _startPos;
           _startPos = _cursor;
-          // => lsh
           $$ = _parse_lsh();
-          // <= lsh
           _startPos = startPos0;
           if (success) break;
           var startPos1 = _startPos;
           _startPos = _cursor;
-          // => rsh
           $$ = _parse_rsh();
-          // <= rsh
           _startPos = startPos1;
           break;
         }
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: '<<'
       _failure(_expect8);
     }
-    // <= lsh / rsh # Choice
     _token = null;
     _tokenStart = null;
     return $$;
   }
   
   dynamic _parse_sign() {
-    // MORHEME
-    // sign <- [+\-]
     var $$;
-    // => [+\-] # Choice
     switch (_getState(_transitions3)) {
-      // [+] [-]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => [+\-]
         $$ = _matchMapping(43, 45, _mapping6);
-        // <= [+\-]
         _startPos = startPos0;
         break;
-      // No matches
-      // EOF
       case 1:
       case 2:
         $$ = null;
@@ -6977,46 +5538,27 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= [+\-] # Choice
     return $$;
   }
   
   dynamic _parse_simple_escape_sequence() {
-    // MORHEME
-    // simple_escape_sequence <- [\\] ["'?\\a-bfnrtv]
     var $$;
-    // => [\\] ["'?\\a-bfnrtv] # Choice
     switch (_ch == 92 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\\]
       case 0:
-        // => [\\] ["'?\\a-bfnrtv] # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => [\\]
-          $$ = '\\';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= [\\]
+          $$ = _matchChar(92, '\\');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => ["'?\\a-bfnrtv]
           $$ = _matchMapping(34, 118, _mapping7);
-          // <= ["'?\\a-bfnrtv]
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // [\\]
             final $1 = seq[0];
-            // ["'?\\a-bfnrtv]
             final $2 = seq[1];
             final $start = startPos0;
             $$ = _escape($1);
@@ -7028,10 +5570,7 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= [\\] ["'?\\a-bfnrtv] # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
       case 2:
         $$ = null;
@@ -7039,46 +5578,28 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= [\\] ["'?\\a-bfnrtv] # Choice
     return $$;
   }
   
   dynamic _parse_slash() {
-    // MORHEME
-    // slash <- '/' spaces
     var $$;
-    // => '/' spaces # Choice
     switch (_ch == 47 ? 0 : _ch == -1 ? 2 : 1) {
-      // [/]
       case 0:
-        // => '/' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '/'
-          $$ = '/';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= '/'
+          $$ = _matchChar(47, '/');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '/'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -7090,43 +5611,29 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '/' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: /
       _failure(_expect43);
     }
-    // <= '/' spaces # Choice
     return $$;
   }
   
   dynamic _parse_spaces() {
-    // MORHEME
-    // spaces <- [\t ]*
     var $$;
-    // => [\t ]* # Choice
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      // EOF
       case 0:
       case 2:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => [\t ]*
         var testing0 = _testing; 
         for (var reps = []; ; ) {
           _testing = _cursor;
-          // => [\t ]
           $$ = _matchMapping(9, 32, _mapping8);
-          // <= [\t ]
           if (success) {  
             reps.add($$);
           } else {
@@ -7136,93 +5643,62 @@ class ExprParser {
             break; 
           }
         }
-        // <= [\t ]*
         if (success) {    
-          // [\t ]*
           final $1 = $$;
           final $start = startPos0;
           $$ = _text();
         }
         _startPos = startPos0;
         break;
-      // No matches
       case 1:
         $$ = null;
         success = true;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(_expect44);
     }
-    // <= [\t ]* # Choice
     return $$;
   }
   
   dynamic _parse_spaces2() {
-    // MORHEME
-    // spaces2 <- spaces
     var $$;
-    // => spaces # Choice
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      // EOF
       case 0:
       case 2:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => spaces
         $$ = _parse_spaces();
-        // <= spaces
         _startPos = startPos0;
         break;
-      // No matches
       case 1:
         $$ = null;
         success = true;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(_expect44);
     }
-    // <= spaces # Choice
     return $$;
   }
   
   dynamic _parse_tilde() {
-    // MORHEME
-    // tilde <- '~' spaces
     var $$;
-    // => '~' spaces # Choice
     switch (_ch == 126 ? 0 : _ch == -1 ? 2 : 1) {
-      // [~]
       case 0:
-        // => '~' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '~'
-          $$ = '~';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= '~'
+          $$ = _matchChar(126, '~');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '~'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -7234,27 +5710,19 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '~' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: ~
       _failure(_expect45);
     }
-    // <= '~' spaces # Choice
     return $$;
   }
   
   dynamic _parse_unary_expression() {
-    // SENTENCE (NONTERMINAL)
-    // unary_expression <- primary_expression / unary_operator unary_expression
     var $$;          
     var pos = _cursor;             
     if(_cachePos[12] >= pos) {
@@ -7265,29 +5733,20 @@ class ExprParser {
     } else {
       _cachePos[12] = pos;
     }  
-    // => primary_expression / unary_operator unary_expression # Choice
     switch (_getState(_transitions5)) {
-      // [!] [+] [-] [~]
       case 0:
-        // => unary_operator unary_expression # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => unary_operator
           $$ = _parse_unary_operator();
-          // <= unary_operator
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => unary_expression
           $$ = _parse_unary_expression();
-          // <= unary_expression
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // unary_operator
             final $1 = seq[0];
-            // unary_expression
             final $2 = seq[1];
             final $start = startPos0;
             $$ = _unary($1, $2, $start);
@@ -7299,30 +5758,54 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= unary_operator unary_expression # Sequence
         break;
-      // [\'-(] [.] [0-9] [A-Z] [\\] [_] [a-z]
       case 1:
         var startPos1 = _startPos;
         _startPos = _cursor;
-        // => primary_expression
         $$ = _parse_primary_expression();
-        // <= primary_expression
         _startPos = startPos1;
         break;
-      // No matches
-      // EOF
       case 2:
-      case 3:
         $$ = null;
         success = false;
         break;
+      case 3:
+        while (true) {
+          var startPos2 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_primary_expression();
+          _startPos = startPos2;
+          if (success) break;
+          var ch1 = _ch, pos1 = _cursor, startPos3 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            $$ = _parse_unary_operator();
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            $$ = _parse_unary_expression();
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            if (success) {    
+              final $1 = seq[0];
+              final $2 = seq[1];
+              final $start = startPos3;
+              $$ = _unary($1, $2, $start);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch1;
+            _cursor = pos1;
+          }
+          _startPos = startPos3;
+          break;
+        }
+        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined', identifier, constant, '(', unary_operator
       _failure(_expect0);
     }
-    // <= primary_expression / unary_operator unary_expression # Choice
     if (_cacheable[12]) {
       _addToCache($$, pos, 12);
     }    
@@ -7330,102 +5813,92 @@ class ExprParser {
   }
   
   dynamic _parse_unary_operator() {
-    // LEXEME (TOKEN)
-    // unary_operator <- plus / minus / tilde / exclamation
     var $$;
     _token = 16;  
     _tokenStart = _cursor;  
-    // => plus / minus / tilde / exclamation # Choice
     switch (_getState(_transitions15)) {
-      // [!]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => exclamation
         $$ = _parse_exclamation();
-        // <= exclamation
         _startPos = startPos0;
         break;
-      // [+]
       case 1:
         var startPos1 = _startPos;
         _startPos = _cursor;
-        // => plus
         $$ = _parse_plus();
-        // <= plus
         _startPos = startPos1;
         break;
-      // [-]
       case 2:
         var startPos2 = _startPos;
         _startPos = _cursor;
-        // => minus
         $$ = _parse_minus();
-        // <= minus
         _startPos = startPos2;
         break;
-      // [~]
       case 3:
         var startPos3 = _startPos;
         _startPos = _cursor;
-        // => tilde
         $$ = _parse_tilde();
-        // <= tilde
         _startPos = startPos3;
         break;
-      // No matches
-      // EOF
       case 4:
-      case 5:
         $$ = null;
         success = false;
         break;
+      case 5:
+        while (true) {
+          var startPos4 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_plus();
+          _startPos = startPos4;
+          if (success) break;
+          var startPos5 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_minus();
+          _startPos = startPos5;
+          if (success) break;
+          var startPos6 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_tilde();
+          _startPos = startPos6;
+          if (success) break;
+          var startPos7 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_exclamation();
+          _startPos = startPos7;
+          break;
+        }
+        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: unary_operator
       _failure(_expect22);
     }
-    // <= plus / minus / tilde / exclamation # Choice
     _token = null;
     _tokenStart = null;
     return $$;
   }
   
   dynamic _parse_universal_character_name() {
-    // MORHEME
-    // universal_character_name <- '\\U' hex_quad hex_quad / '\\u' hex_quad
     var $$;
-    // => '\\U' hex_quad hex_quad / '\\u' hex_quad # Choice
     switch (_ch == 92 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\\]
       case 0:
         while (true) {
-          // => '\\U' hex_quad hex_quad # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => '\\U'
             $$ = _matchString(_strings15, '\\U');
-            // <= '\\U'
             if (!success) break;
             var seq = new List(3)..[0] = $$;
-            // => hex_quad
             $$ = _parse_hex_quad();
-            // <= hex_quad
             if (!success) break;
             seq[1] = $$;
-            // => hex_quad
             $$ = _parse_hex_quad();
-            // <= hex_quad
             if (!success) break;
             seq[2] = $$;
             $$ = seq;
             if (success) {    
-              // '\\U'
               final $1 = seq[0];
-              // hex_quad
               final $2 = seq[1];
-              // hex_quad
               final $3 = seq[2];
               final $start = startPos0;
               $$ = int.parse(_text(2), radix: 16);
@@ -7437,27 +5910,19 @@ class ExprParser {
             _cursor = pos0;
           }
           _startPos = startPos0;
-          // <= '\\U' hex_quad hex_quad # Sequence
           if (success) break;
-          // => '\\u' hex_quad # Sequence
           var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => '\\u'
             $$ = _matchString(_strings16, '\\u');
-            // <= '\\u'
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            // => hex_quad
             $$ = _parse_hex_quad();
-            // <= hex_quad
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // '\\u'
               final $1 = seq[0];
-              // hex_quad
               final $2 = seq[1];
               final $start = startPos1;
               $$ = int.parse(_text(2), radix: 16);
@@ -7469,12 +5934,9 @@ class ExprParser {
             _cursor = pos1;
           }
           _startPos = startPos1;
-          // <= '\\u' hex_quad # Sequence
           break;
         }
         break;
-      // No matches
-      // EOF
       case 1:
       case 2:
         $$ = null;
@@ -7482,30 +5944,20 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: \U, \u
       _failure(_expect46);
     }
-    // <= '\\U' hex_quad hex_quad / '\\u' hex_quad # Choice
     return $$;
   }
   
   dynamic _parse_unsigned_suffix() {
-    // MORHEME
-    // unsigned_suffix <- [Uu]
     var $$;
-    // => [Uu] # Choice
     switch (_getState(_transitions38)) {
-      // [U] [u]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => [Uu]
         $$ = _matchMapping(85, 117, _mapping9);
-        // <= [Uu]
         _startPos = startPos0;
         break;
-      // No matches
-      // EOF
       case 1:
       case 2:
         $$ = null;
@@ -7513,48 +5965,30 @@ class ExprParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 
       _failure(const [null]);
     }
-    // <= [Uu] # Choice
     return $$;
   }
   
   dynamic _parse_vertical_line() {
-    // LEXEME (TOKEN)
-    // vertical_line <- '|' spaces
     var $$;
     _token = 17;  
     _tokenStart = _cursor;  
-    // => '|' spaces # Choice
     switch (_ch == 124 ? 0 : _ch == -1 ? 2 : 1) {
-      // [|]
       case 0:
-        // => '|' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '|'
-          $$ = '|';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= '|'
+          $$ = _matchChar(124, '|');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '|'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -7566,55 +6000,39 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '|' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: '|'
       _failure(_expect3);
     }
-    // <= '|' spaces # Choice
     _token = null;
     _tokenStart = null;
     return $$;
   }
   
   dynamic _parse_vertical_line2() {
-    // LEXEME (TOKEN)
-    // vertical_line2 <- '||' spaces
     var $$;
     _token = 18;  
     _tokenStart = _cursor;  
-    // => '||' spaces # Choice
     switch (_ch == 124 ? 0 : _ch == -1 ? 2 : 1) {
-      // [|]
       case 0:
-        // => '||' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '||'
           $$ = _matchString(_strings3, '||');
-          // <= '||'
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '||'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -7626,61 +6044,39 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '||' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: '||'
       _failure(_expect1);
     }
-    // <= '||' spaces # Choice
     _token = null;
     _tokenStart = null;
     return $$;
   }
   
   dynamic _parse_xor() {
-    // LEXEME (TOKEN)
-    // xor <- '^' spaces
     var $$;
     _token = 19;  
     _tokenStart = _cursor;  
-    // => '^' spaces # Choice
     switch (_ch == 94 ? 0 : _ch == -1 ? 2 : 1) {
-      // [^]
       case 0:
-        // => '^' spaces # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => '^'
-          $$ = '^';
-          success = true;
-          if (++_cursor < _inputLen) {
-            _ch = _input[_cursor];
-          } else {
-            _ch = -1;
-          }
-          // <= '^'
+          $$ = _matchChar(94, '^');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces
           $$ = _parse_spaces();
-          // <= spaces
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // '^'
             final $1 = seq[0];
-            // spaces
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -7692,21 +6088,15 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '^' spaces # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: '^'
       _failure(_expect4);
     }
-    // <= '^' spaces # Choice
     _token = null;
     _tokenStart = null;
     return $$;
@@ -7844,72 +6234,51 @@ class ExprParser {
   }
   
   dynamic parse_eval_line() {
-    // SENTENCE (NONTERMINAL)
-    // eval_line <- constant_expression (new_line / eof)
     var $$;
-    // => constant_expression (new_line / eof) # Choice
     switch (_getState(_transitions0)) {
-      // [!] [\'-(] [+] [--.] [0-9] [A-Z] [\\] [_] [a-z] [~]
       case 0:
-        // => constant_expression (new_line / eof) # Sequence
+      case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => constant_expression
           $$ = _parse_constant_expression();
-          // <= constant_expression
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => (new_line / eof) # Choice
           switch (_getState(_transitions7)) {
-            // [\u0000-\t] [\u000b-\u000c] [\u000e-\u0010ffff]
-            // EOF
             case 0:
             case 3:
               var startPos1 = _startPos;
               _startPos = _cursor;
-              // => eof
               $$ = _parse_eof();
-              // <= eof
               _startPos = startPos1;
               break;
-            // [\n] [\r]
             case 1:
               while (true) {
                 var startPos2 = _startPos;
                 _startPos = _cursor;
-                // => new_line
                 $$ = _parse_new_line();
-                // <= new_line
                 _startPos = startPos2;
                 if (success) break;
                 var startPos3 = _startPos;
                 _startPos = _cursor;
-                // => eof
                 $$ = _parse_eof();
-                // <= eof
                 _startPos = startPos3;
                 break;
               }
               break;
-            // No matches
             case 2:
               $$ = null;
               success = false;
               break;
           }
           if (!success && _cursor > _testing) {
-            // Expected: new_line, eof
             _failure(_expect13);
           }
-          // <= (new_line / eof) # Choice
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // constant_expression
             final $1 = seq[0];
-            // (new_line / eof)
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -7921,21 +6290,15 @@ class ExprParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= constant_expression (new_line / eof) # Sequence
         break;
-      // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'defined', identifier, constant, '(', unary_operator
       _failure(_expect0);
     }
-    // <= constant_expression (new_line / eof) # Choice
     return $$;
   }
   
