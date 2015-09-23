@@ -3,7 +3,7 @@ macro_rocessor
 
 Lightweight macro processor with syntax similar to C language.
 
-Version: 0.0.12
+Version: 0.0.14
 
 Initial release. Use at your own risk!
 

@@ -1,3 +1,7 @@
+## 0.0.14
+
+- Fixed bug in `expr.peg` grammar
+
 ## 0.0.12
 
 - Fixed bug in `expr.peg` grammar

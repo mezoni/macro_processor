@@ -425,7 +425,7 @@ plus <-
   '+' spaces { $$ = $1; }
 
 rsh <-
-  '<<' spaces { $$ = $1; }
+  '>>' spaces { $$ = $1; }
 
 s_char <-
   ![\n\r"\\] . { $$ = $2.codeUnitAt(0); }
