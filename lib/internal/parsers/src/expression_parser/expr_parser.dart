@@ -351,7 +351,7 @@ class ExprParser {
   
   static final List<List<int>> _transitions6 = [[33, 33, 43, 43, 45, 45, 126, 126], [34, 34, 39, 40, 46, 46, 48, 57, 65, 90, 92, 92, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions7 = [[34, 34], [39, 39, 46, 46, 48, 57], [40, 40], [65, 90], [92, 92, 95, 95, 97, 99, 101, 122], [100, 100]];
+  static final List<List<int>> _transitions7 = [[34, 34], [39, 39, 46, 46, 48, 57], [40, 40], [65, 75, 77, 90, 92, 92, 95, 95, 97, 99, 101, 122], [76, 76], [100, 100]];
   
   static final List<List<int>> _transitions8 = [[43, 43], [45, 45]];
   
@@ -4978,29 +4978,29 @@ class ExprParser {
         _startPos = startPos2;
         break;
       case 3:
+        var startPos3 = _startPos;
+        _startPos = _cursor;
+        $$ = _parse_identifier();
+        _startPos = startPos3;
+        break;
+      case 4:
         while (true) {
-          var startPos3 = _startPos;
-          _startPos = _cursor;
-          $$ = _parse_identifier();
-          _startPos = startPos3;
-          if (success) break;
           var startPos4 = _startPos;
           _startPos = _cursor;
-          $$ = _parse_constant();
+          $$ = _parse_string_literal();
           _startPos = startPos4;
           if (success) break;
           var startPos5 = _startPos;
           _startPos = _cursor;
-          $$ = _parse_string_literal();
+          $$ = _parse_identifier();
           _startPos = startPos5;
+          if (success) break;
+          var startPos6 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_constant();
+          _startPos = startPos6;
           break;
         }
-        break;
-      case 4:
-        var startPos6 = _startPos;
-        _startPos = _cursor;
-        $$ = _parse_identifier();
-        _startPos = startPos6;
         break;
       case 5:
         while (true) {
@@ -5029,17 +5029,17 @@ class ExprParser {
           if (success) break;
           var startPos10 = _startPos;
           _startPos = _cursor;
-          $$ = _parse_identifier();
+          $$ = _parse_string_literal();
           _startPos = startPos10;
           if (success) break;
           var startPos11 = _startPos;
           _startPos = _cursor;
-          $$ = _parse_constant();
+          $$ = _parse_identifier();
           _startPos = startPos11;
           if (success) break;
           var startPos12 = _startPos;
           _startPos = _cursor;
-          $$ = _parse_string_literal();
+          $$ = _parse_constant();
           _startPos = startPos12;
           if (success) break;
           var ch1 = _ch, pos1 = _cursor, startPos13 = _startPos;
