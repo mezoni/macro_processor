@@ -137,6 +137,10 @@ class ExpressionEvaluator extends GeneralVisitor {
     return node.expression.accept(this);
   }
 
+  Object visitStringLiteral(StringLiteral node) {
+    return node.value;
+  }
+
   Object visitUnaryExpression(UnaryExpression node) {
     var operand = node.operand;
     var value = operand.accept(this);

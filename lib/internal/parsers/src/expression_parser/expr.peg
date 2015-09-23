@@ -5,18 +5,18 @@ Expression _buildBinary(Expression first, List rest) {
   Expression builder(Expression result, List element) {
     return new BinaryExpression(left: result, operator: element[0], position: result.position, right: element[1]);
   };
-  return _buildTree(first, rest, builder);        
+  return _buildTree(first, rest, builder);
 }
 
 Expression _buildTree(Expression first, List rest, builder(Expression result, List rest)) {
-  var result = first;    
+  var result = first;
   for (var i = 0; i < rest.length; i++) {
     result = builder(result, rest[i]);
   }
   return result;
 }
 
-Expression _conditional(Expression condition, Expression success, Expression fail, int position) {  
+Expression _conditional(Expression condition, Expression success, Expression fail, int position) {
   return new ConditionalExpression(condition: condition, success: success, fail: fail, position: position);
 }
 
@@ -45,7 +45,7 @@ int _escape(String ch) {
     case "\\":
       return 0x5c;
     default:
-      throw new StateError("Unknown escape sequence: \\$ch");  
+      throw new StateError("Unknown escape sequence: \\$ch");
   }
 }
 
@@ -91,7 +91,7 @@ StringLiteral _stringLiteral(String source, List<int> characters, int position) 
   var value = "";
   if (characters != null) {
     value = new String.fromCharCodes(characters);
-  }    
+  }
   return new StringLiteral(position: position, text: source, value: value);
 }
 
@@ -99,16 +99,19 @@ SourceLine _sourceLine(List<SourceFragment> fragments, SourceFragment last, int 
   if (last != null) {
     fragments.add(last);
   }
-  return new SourceLine(fragments: fragments, position: position); 
+  return new SourceLine(fragments: fragments, position: position);
 }
 
-Expression _unary(String operator, Expression operand, int position) {  
+Expression _unary(String operator, Expression operand, int position) {
   return new UnaryExpression(operand: operand, operator: operator, position: position);
 }
 
 }%
 
 ### Sentences (nonterminals) ###
+
+eval_line <-
+  constant_expression (new_line / eof) { $$ = $1; }
 
 constant_expression <-
   conditional_expression
@@ -155,6 +158,7 @@ primary_expression <-
   defined
   / identifier
   / constant
+  / string_literal
   / lparen expression rparen { $$ = new ParenthesisExpression(expression: $2, position: $start); }
 
 defined <-
@@ -162,9 +166,6 @@ defined <-
 
 expression <-
   conditional_expression
-
-eval_line <-
-  constant_expression (new_line / eof) { $$ = $1; }
 
 ### Lexemes (tokens) ###
 
@@ -224,6 +225,9 @@ semicolon <-
 shift_operator <-
   lsh
   / rsh
+
+string_literal <-
+  string_literal_base spaces { $$ = $1; }
 
 unary_operator <-
   plus
@@ -423,6 +427,13 @@ plus <-
 rsh <-
   '<<' spaces { $$ = $1; }
 
+s_char <-
+  ![\n\r"\\] . { $$ = $2.codeUnitAt(0); }
+  / escape_sequence
+
+s_char_sequence <-
+  s_char+
+
 sign <-
   [+\-]
 
@@ -437,6 +448,10 @@ spaces <-
 
 spaces2 <-
   spaces
+
+string_literal_base <-
+  '"' s_char_sequence? '"' { $$ = _stringLiteral(_text(), $2, $start); }
+  / 'L"' s_char_sequence? '"' { $$ = _stringLiteral(_text(), $2, $start); }
 
 tilde <-
   '~' spaces { $$ = $1; }

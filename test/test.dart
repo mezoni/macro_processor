@@ -194,4 +194,5 @@ _HELLO_ OS
 #endif
 #define E YEE!
 #define ESC C:\\
+#define NAME "Jonh"
 1E2 E''';
